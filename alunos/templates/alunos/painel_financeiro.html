@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
-        /* A Sua Paleta Oficial */
         :root {
             --ciano-bg: #E6F7FF;
             --roxo-escuro: #6F42C1;
@@ -23,7 +22,6 @@
             color: #333;
         }
 
-        /* --- Responsividade da Logo --- */
         .navbar-logo {
             height: 70px;
             object-fit: contain;
@@ -33,7 +31,6 @@
             .navbar-logo { height: 130px; }
         }
 
-        /* --- Botões Roxos Oficiais --- */
         .btn-purple {
             background-color: var(--roxo-escuro);
             color: white;
@@ -48,7 +45,6 @@
             color: white;
         }
 
-        /* --- Estética do Card da Tabela --- */
         .card-financeiro {
             border-radius: 20px;
             border: none;
@@ -57,10 +53,9 @@
             padding: 40px;
         }
 
-        /* Cores de Status Financeiro (A lógica do seu Python continua igualzinha!) */
-        .ok { color: #198754; font-weight: 800; } /* Verde */
-        .atrasado { color: #dc3545; font-weight: 800; } /* Vermelho */
-        .avencer { color: #fd7e14; font-weight: 800; } /* Laranja */
+        .ok { color: #198754; font-weight: 800; }
+        .atrasado { color: #dc3545; font-weight: 800; }
+        .avencer { color: #fd7e14; font-weight: 800; }
         
         table th { color: var(--roxo-escuro); font-weight: bold; border-bottom: 2px solid var(--ciano-bg) !important; }
         table td { vertical-align: middle; padding: 15px !important; }
@@ -70,21 +65,16 @@
 
     <nav class="navbar pt-4 pb-4 mb-5">
         <div class="container d-flex align-items-center">
-            
             <a class="navbar-brand me-auto d-lg-none" href="/">
                 <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
             </a>
-            
             <div class="d-none d-lg-block" style="flex: 1;"></div>
-            
             <a class="navbar-brand mx-auto d-none d-lg-block text-center" href="/">
                 <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
             </a>
-            
             <div class="d-flex gap-2 justify-content-end" style="flex: 1;">
-                <a href="/agendamento/" class="btn btn-purple btn-sm">Ver Reservas</a>
+                <a href="/admin/" class="btn btn-purple btn-sm">Painel Administrativo</a>
             </div>
-            
         </div>
     </nav>
 
@@ -94,8 +84,31 @@
                 <div class="card-financeiro">
                     
                     <div class="text-center mb-5">
-                        <h2 class="fw-bold" style="color: var(--roxo-escuro);">📊 Fluxo de Caixa Mensal</h2>
+                        <h2 class="fw-bold" style="color: var(--roxo-escuro);"> Fluxo de Caixa Mensal</h2>
                         <p class="text-muted fs-5">Visão geral de todos os alunos no mês: <strong style="color: var(--roxo-escuro);">{{ mes_texto }}</strong></p>
+                    </div>
+
+                    <div class="row g-3 mb-5">
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 text-center h-100" style="background: #d1fae5; border: 1.5px solid #6ee7b7; border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 800; color: #065f46;">{{ total_ok }}</div>
+                                <div style="color: #065f46; font-weight: 600; font-size: 0.85rem;">✅ Pagamentos OK</div>
+                                <div class="mt-1" style="color: #047857; font-weight: 700;">R$ {{ receita_confirmada }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 text-center h-100" style="background: #fff7ed; border: 1.5px solid #fed7aa; border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 800; color: #9a3412;">{{ total_avencer }}</div>
+                                <div style="color: #9a3412; font-weight: 600; font-size: 0.85rem;">🟠 A Vencer</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 text-center h-100" style="background: #fee2e2; border: 1.5px solid #fca5a5; border-radius: 15px;">
+                                <div style="font-size: 2rem; font-weight: 800; color: #991b1b;">{{ total_atrasado }}</div>
+                                <div style="color: #991b1b; font-weight: 600; font-size: 0.85rem;">🔴 Atrasados</div>
+                                <div class="mt-1" style="color: #b91c1c; font-weight: 700;">R$ {{ receita_pendente }} em aberto</div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="table-responsive">

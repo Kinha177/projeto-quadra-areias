@@ -1,0 +1,22 @@
+{% if horario.disponivel %}
+    <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
+       class="btn btn-outline-purple btn-horario btn-sm"
+       target="_blank"
+       aria-label="Reservar {{ horario.hora_formatada }}">
+        {{ horario.hora_formatada }}
+    </a>
+{% elif horario.status == 'Esgotado' %}
+    <span class="btn btn-sm disabled text-decoration-line-through"
+          style="border-radius:10px; opacity:0.4; background:#ccc; color:#666; border:none;"
+          aria-label="{{ horario.hora_formatada }} esgotado"
+          title="Horário passado">
+        {{ horario.hora_formatada }}
+    </span>
+{% else %}
+    <span class="btn btn-sm disabled"
+          style="border-radius:10px; background:#f8d7da; color:#842029; border: 1.5px solid #f5c2c7; font-weight:600;"
+          aria-label="{{ horario.hora_formatada }} ocupado"
+          title="Ocupado">
+        {{ horario.hora_formatada }}
+    </span>
+{% endif %}

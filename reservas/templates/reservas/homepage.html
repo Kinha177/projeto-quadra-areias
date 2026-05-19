@@ -1,233 +1,877 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="pt-BR" style="scroll-behavior: smooth;"> 
+<html lang="pt-BR" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena Ibituruna Beach - O melhor pé na areia de Montes Claros</title>
-    
+    <title>Arena Ibituruna Beach — O melhor pé na areia de Montes Claros</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <style>
-        /* Paleta de Cores Exata do Figma */
+        /* ============================================================
+           DESIGN SYSTEM — ARENA IBITURUNA BEACH
+           Conceito: "Sand & Signal" — esportivo, premium, vibrante
+        ============================================================ */
+
         :root {
-            --ciano-bg: #E6F7FF;
-            --roxo-escuro: #6F42C1;
-            --verde-lima-bg: #ECF9E3;
-            --roxo-hover: #5A32A3;
+            --ciano-bg:       #E6F7FF;
+            --roxo-escuro:    #6F42C1;
+            --roxo-hover:     #5A32A3;
+            --roxo-glow:      rgba(111, 66, 193, 0.18);
+            --roxo-ultra:     rgba(111, 66, 193, 0.06);
+            --verde-lima-bg:  #ECF9E3;
+            --verde-acento:   #52C41A;
+            --cinza-texto:    #1a1a2e;
+            --cinza-suave:    #6b7280;
+            --branco:         #ffffff;
+
+            /* Sombras coloridas — o que diferencia do template genérico */
+            --shadow-card:    0 4px 24px rgba(111, 66, 193, 0.10), 0 1px 4px rgba(0,0,0,0.04);
+            --shadow-hover:   0 12px 40px rgba(111, 66, 193, 0.22), 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-btn:     0 4px 16px rgba(111, 66, 193, 0.40);
+            --shadow-btn-hover: 0 8px 28px rgba(111, 66, 193, 0.55);
+
+            --radius-card:    24px;
+            --radius-btn:     50px;
+            --radius-chip:    12px;
         }
+
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             background-color: var(--ciano-bg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--cinza-texto);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* Botões customizados (Roxo do Figma) */
-        .btn-purple {
-            background-color: var(--roxo-escuro);
-            color: white;
-            border-radius: 20px;
-            font-weight: 600;
-            padding: 8px 24px;
-            border: none;
-            text-decoration: none;
-        }
-        .btn-purple:hover {
-            background-color: var(--roxo-hover);
-            color: white;
+        /* ---- Noise texture overlay (dá textura orgânica ao fundo) ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
         }
 
-        /* Hero / Main Banner */
-        .hero-section {
-            padding: 60px 0 100px 0;
+        /* ---- Orbes decorativas (profundidade visual sem peso) ---- */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-orb-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(111,66,193,0.08) 0%, transparent 70%);
+            top: -200px; right: -150px;
+        }
+        .bg-orb-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(82,196,26,0.07) 0%, transparent 70%);
+            bottom: 10%; left: -100px;
+        }
+
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
+        .navbar-arena {
             position: relative;
-        }
-        .banner-card {
-            border-radius: 25px;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        /* O botão Agendar por cima do Carrossel */
-        .btn-agende-hero {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10; 
+            z-index: 100;
+            padding: 20px 0;
+            background: rgba(230, 247, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(111,66,193,0.08);
         }
 
-        /* Nosso Espaço */
-        .espaco-card-info {
-            background-color: var(--roxo-escuro);
-            color: white;
-            border-radius: 15px;
-            padding: 30px;
-        }
-        
-        /* Ajuste para o carrossel ter a borda roxa arredondada do Figma */
-        .espaco-carousel {
-            border-radius: 15px;
-            border: 5px solid var(--roxo-escuro);
-            overflow: hidden;
-        }
-
-        /* Rodapé / Contato */
-        .contact-section {
-            background-color: var(--verde-lima-bg);
-            border-radius: 200px 0 0 0;
-            padding: 100px 0 50px 0;
-            margin-top: 50px;
-        }
-        .contact-info h3 { color: var(--roxo-escuro); font-weight: bold; }
-        .contact-info p { color: var(--roxo-escuro); font-weight: 500; margin-bottom: 5px;}
-
-        /* --- Responsividade da Logo --- */
         .navbar-logo {
-            height: 70px;
+            height: 64px;
             object-fit: contain;
-            transition: height 0.3s ease;
+            transition: transform 0.3s ease;
         }
-        
-        /* Quando a tela for grande (PC) a logo cresce, mas sem flutuar! */
+        .navbar-logo:hover { transform: scale(1.04); }
+
         @media (min-width: 992px) {
-            .navbar-logo {
-                height: 130px; 
-            }
+            .navbar-logo { height: 110px; }
         }
+
+        /* ============================================================
+           BUTTONS
+        ============================================================ */
+        .btn-arena {
+            background: var(--roxo-escuro);
+            color: var(--branco);
+            border: none;
+            border-radius: var(--radius-btn);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.01em;
+            padding: 10px 24px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-arena::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+            border-radius: inherit;
+        }
+        .btn-arena:hover {
+            background: var(--roxo-hover);
+            color: var(--branco);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-btn-hover);
+        }
+        .btn-arena:active { transform: translateY(0); }
+
+        .btn-arena-lg {
+            font-size: 1.05rem;
+            padding: 14px 36px;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-arena-ghost {
+            background: transparent;
+            color: var(--roxo-escuro);
+            border: 1.5px solid rgba(111,66,193,0.35);
+            border-radius: var(--radius-btn);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 9px 22px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.22s ease;
+        }
+        .btn-arena-ghost:hover {
+            background: var(--roxo-ultra);
+            border-color: var(--roxo-escuro);
+            color: var(--roxo-escuro);
+        }
+
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        .hero-section {
+            position: relative;
+            z-index: 1;
+            padding: 48px 0 80px;
+        }
+
+        /* Chip acima do headline */
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(111,66,193,0.10);
+            border: 1px solid rgba(111,66,193,0.20);
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--roxo-escuro);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .hero-chip-dot {
+            width: 7px; height: 7px;
+            background: var(--verde-acento);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.75); }
+        }
+
+        /* Headline com Syne */
+        .hero-headline {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            line-height: 1.08;
+            color: var(--cinza-texto);
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .hero-headline .accent {
+            color: var(--roxo-escuro);
+            position: relative;
+            display: inline-block;
+        }
+        /* Sublinhado decorativo no texto roxo */
+        .hero-headline .accent::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--roxo-escuro), transparent);
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: var(--cinza-suave);
+            line-height: 1.6;
+            max-width: 420px;
+            margin-bottom: 36px;
+        }
+
+        /* Badges de esportes */
+        .sport-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 36px;
+        }
+        .sport-badge {
+            background: var(--branco);
+            border: 1.5px solid rgba(111,66,193,0.15);
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--cinza-texto);
+            box-shadow: 0 2px 8px rgba(111,66,193,0.06);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Wrapper do carrossel hero */
+        .hero-carousel-wrapper {
+            position: relative;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(111,66,193,0.20), 0 4px 16px rgba(0,0,0,0.08);
+        }
+        /* Overlay em gradiente sobre o carrossel */
+        .hero-carousel-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 40%,
+                rgba(111, 66, 193, 0.25) 100%
+            );
+            pointer-events: none;
+            z-index: 5;
+        }
+        .hero-carousel-wrapper .carousel-item img {
+            height: clamp(280px, 45vw, 560px);
+            object-fit: cover;
+            width: 100%;
+        }
+
+        /* Stat pills flutuando sobre o carrossel */
+        .hero-stats {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .hero-stat-pill {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .hero-stat-pill .stat-icon {
+            font-size: 1.1rem;
+        }
+        .hero-stat-pill .stat-text {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--cinza-texto);
+            line-height: 1.2;
+        }
+        .hero-stat-pill .stat-text small {
+            display: block;
+            font-weight: 400;
+            color: var(--cinza-suave);
+            font-size: 0.7rem;
+        }
+
+        /* ============================================================
+           CTA SECTION (abaixo do hero)
+        ============================================================ */
+        .cta-section {
+            position: relative;
+            z-index: 1;
+            padding: 0 0 80px;
+        }
+        .cta-inner {
+            background: var(--roxo-escuro);
+            border-radius: var(--radius-card);
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Textura decorativa dentro do CTA */
+        .cta-inner::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 280px; height: 280px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .cta-inner::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: 30%;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+        }
+        .cta-inner .cta-text {
+            position: relative;
+            z-index: 1;
+        }
+        .cta-inner .cta-text h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 800;
+            color: var(--branco);
+            margin: 0 0 6px;
+            letter-spacing: -0.01em;
+        }
+        .cta-inner .cta-text p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.70);
+            margin: 0;
+        }
+        .btn-cta-white {
+            background: var(--branco);
+            color: var(--roxo-escuro);
+            border: none;
+            border-radius: var(--radius-btn);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px 32px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.20);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
+        }
+        .btn-cta-white:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.28);
+            color: var(--roxo-hover);
+        }
+
+        /* ============================================================
+           NOSSO ESPAÇO
+        ============================================================ */
+        .espaco-section {
+            position: relative;
+            z-index: 1;
+            padding: 40px 0 80px;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--roxo-escuro);
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            letter-spacing: -0.02em;
+            color: var(--cinza-texto);
+            line-height: 1.1;
+            margin-bottom: 0;
+        }
+
+        /* Cards de espaço */
+        .espaco-card {
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            background: var(--branco);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .espaco-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .espaco-img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .espaco-img-wrapper .carousel-item img {
+            height: 280px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+        .espaco-card:hover .espaco-img-wrapper .carousel-item img {
+            transform: scale(1.03);
+        }
+
+        /* Borda decorativa lateral nos cards de espaço */
+        .espaco-img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--roxo-escuro) 0%, transparent 100%);
+            z-index: 10;
+        }
+
+        .espaco-info {
+            padding: 28px 32px;
+        }
+        .espaco-info h4 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: var(--cinza-texto);
+            margin-bottom: 10px;
+        }
+        .espaco-info p {
+            font-size: 0.9rem;
+            color: var(--cinza-suave);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* Chips de features dentro dos cards */
+        .espaco-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 16px;
+        }
+        .feature-chip {
+            background: var(--ciano-bg);
+            border: 1px solid rgba(111,66,193,0.12);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--roxo-escuro);
+        }
+
+        /* ============================================================
+           RODAPÉ / CONTATO
+        ============================================================ */
+        .contact-section {
+            position: relative;
+            z-index: 1;
+            background: var(--verde-lima-bg);
+            border-radius: 120px 0 0 0;
+            padding: 80px 0 56px;
+            margin-top: 20px;
+        }
+
+        .contact-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--roxo-escuro);
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .contact-item .contact-icon {
+            width: 36px; height: 36px;
+            background: rgba(111,66,193,0.10);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+        .contact-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .wpp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #25D366;
+            color: white;
+            border-radius: var(--radius-btn);
+            padding: 13px 28px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+            transition: all 0.25s ease;
+            margin-top: 28px;
+        }
+        .wpp-btn:hover {
+            background: #1ebe5e;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37,211,102,0.45);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: rgba(111,66,193,0.12);
+            margin: 40px 0 24px;
+        }
+        .footer-bottom {
+            font-size: 0.78rem;
+            color: var(--cinza-suave);
+            text-align: center;
+        }
+
+        /* ============================================================
+           ANIMAÇÕES DE ENTRADA
+        ============================================================ */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .anim-1 { animation: fadeSlideUp 0.6s ease forwards; }
+        .anim-2 { animation: fadeSlideUp 0.6s 0.12s ease both; }
+        .anim-3 { animation: fadeSlideUp 0.6s 0.24s ease both; }
+        .anim-4 { animation: fadeSlideUp 0.6s 0.36s ease both; }
+        .anim-5 { animation: fadeSlideUp 0.6s 0.48s ease both; }
 
     </style>
 </head>
 <body>
 
-    <nav class="navbar pt-4 pb-4">
+    <!-- Orbes de fundo decorativas -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- ============================================================
+         NAVBAR
+    ============================================================ -->
+    <nav class="navbar-arena">
         <div class="container d-flex align-items-center">
-            
-            <a class="navbar-brand me-auto d-lg-none" href="/">
-                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
+
+            <!-- Logo mobile -->
+            <a class="me-auto d-lg-none" href="/">
+                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena Ibituruna" class="navbar-logo">
             </a>
-            
+
+            <!-- Spacer desktop -->
             <div class="d-none d-lg-block" style="flex: 1;"></div>
-            
-            <a class="navbar-brand mx-auto d-none d-lg-block text-center" href="/">
-                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
+
+            <!-- Logo desktop (centralizada) -->
+            <a class="mx-auto d-none d-lg-flex align-items-center" href="/">
+                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena Ibituruna" class="navbar-logo">
             </a>
-            
+
+            <!-- Ações -->
             <div class="d-flex gap-2 justify-content-end" style="flex: 1;">
-                <a href="#contato" class="btn btn-purple btn-sm">Contato</a>
-                <a href="#nosso-espaco" class="btn btn-purple btn-sm">Nosso Espaço</a>
+                <a href="#nosso-espaco" class="btn-arena-ghost d-none d-sm-inline-flex">Nosso Espaço</a>
+                <a href="#contato" class="btn-arena">Contato</a>
             </div>
-            
         </div>
     </nav>
 
-    <section class="hero-section text-center">
-        <div class="container position-relative">
-            <div class="banner-card">
-                
-                <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators mb-5">
-                        <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
-                        <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
+    <!-- ============================================================
+         HERO
+    ============================================================ -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+
+                <!-- Copy lado esquerdo -->
+                <div class="col-lg-5 anim-1">
+                    <div class="hero-chip">
+                        <span class="hero-chip-dot"></span>
+                        Montes Claros · MG
                     </div>
-                    
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{% static 'reservas/img/banner_hero_1.jpg' %}" class="d-block w-100" alt="Atletas jogando">
+
+                    <h1 class="hero-headline">
+                        Arena <span class="accent">Ibituruna</span><br>Beach Sports
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Quadras de areia premium para Beach Tennis, Futevôlei e Vôlei de Praia. Reserve seu horário em segundos e venha jogar.
+                    </p>
+
+                    <div class="sport-badges anim-2">
+                        <span class="sport-badge">🎾 Beach Tennis</span>
+                        <span class="sport-badge">⚽ Futevôlei</span>
+                        <span class="sport-badge">🏐 Vôlei de Praia</span>
+                        <span class="sport-badge">💡 Iluminação noturna</span>
+                    </div>
+
+                    <div class="d-flex gap-3 flex-wrap anim-3">
+                        <a href="/agendamento/" class="btn-arena btn-arena-lg">
+                            🏐 Reservar Agora
+                        </a>
+                        <a href="#nosso-espaco" class="btn-arena-ghost" style="padding: 12px 24px; font-size: 1rem;">
+                            Ver Espaço
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Carrossel lado direito -->
+                <div class="col-lg-7 anim-4">
+                    <div class="hero-carousel-wrapper">
+                        <div id="carouselHero" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="{% static 'reservas/img/banner_hero_1.jpg' %}" alt="Atletas jogando na Arena Ibituruna">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'reservas/img/banner_hero_2.jpg' %}" alt="Vista aérea da Arena">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
                         </div>
-                        <div class="carousel-item">
-                            <img src="{% static 'reservas/img/banner_hero_2.jpg' %}" class="d-block w-100" alt="Vista da arena">
+
+                        <!-- Stats flutuando sobre o carrossel -->
+                        <div class="hero-stats">
+                            <div class="hero-stat-pill">
+                                <span class="stat-icon">🏅</span>
+                                <div class="stat-text">
+                                    2 Quadras
+                                    <small>Alto padrão</small>
+                                </div>
+                            </div>
+                            <div class="hero-stat-pill">
+                                <span class="stat-icon">🌙</span>
+                                <div class="stat-text">
+                                    Até 22h
+                                    <small>Iluminação pro</small>
+                                </div>
+                            </div>
+                            <div class="hero-stat-pill">
+                                <span class="stat-icon">⚡</span>
+                                <div class="stat-text">
+                                    Reserva fácil
+                                    <small>via WhatsApp</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
                 </div>
-                <div class="btn-agende-hero">
-                    <a href="/agendamento/" class="btn btn-purple btn-lg fw-bold px-5">Agende Seu Horário</a>
-                </div>
+
             </div>
         </div>
     </section>
 
-    <section id="nosso-espaco" class="container pt-5">
-        <h2 class="text-center fw-bold mb-5" style="color: var(--roxo-escuro);">Nosso espaço</h2>
-        
-        <div class="row align-items-center mb-5">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <div id="carouselQuadras" class="carousel slide espaco-carousel shadow" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{% static 'reservas/img/quadras_areia_1.jpg' %}" class="d-block w-100" alt="Quadras de areia">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{% static 'reservas/img/quadras_areia_2.jpg' %}" class="d-block w-100" alt="Rede de vôlei">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselQuadras" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselQuadras" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
+    <!-- ============================================================
+         CTA BANNER
+    ============================================================ -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-inner">
+                <div class="cta-text">
+                    <h3>Pronto para entrar em quadra?</h3>
+                    <p>Veja os horários disponíveis agora e reserve pelo WhatsApp em menos de 1 minuto.</p>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="espaco-card-info shadow">
-                    <p>Contamos com duas quadras de areia de alto padrão, preparadas para Beach Tennis, Vôlei de Praia e Futevôlei. Espaço amplo, iluminação profissional e a melhor textura de areia para o seu jogo.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row align-items-center">
-            <div class="col-md-6 order-md-2 mb-4 mb-md-0">
-                <div id="carouselConvivencia" class="carousel slide espaco-carousel shadow" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{% static 'reservas/img/area_convivencia_1.jpg' %}" class="d-block w-100" alt="Área de convivência">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{% static 'reservas/img/area_convivencia_2.jpg' %}" class="d-block w-100" alt="Bar e Petiscos">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselConvivencia" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselConvivencia" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-md-6 order-md-1">
-                <div class="espaco-card-info shadow">
-                    <p>O melhor lugar para o seu pós-jogo! Bebidas geladas, petiscos variados e um ambiente descontraído para resenhar com a galera enquanto recupera as energias.</p>
-                </div>
+                <a href="/agendamento/" class="btn-cta-white">
+                    📅 Ver Horários Disponíveis →
+                </a>
             </div>
         </div>
     </section>
 
+    <!-- ============================================================
+         NOSSO ESPAÇO
+    ============================================================ -->
+    <section id="nosso-espaco" class="espaco-section">
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <p class="section-label">Estrutura</p>
+                <h2 class="section-title">Nosso Espaço</h2>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Card Quadras -->
+                <div class="col-md-6">
+                    <div class="espaco-card h-100">
+                        <div class="espaco-img-wrapper">
+                            <div id="carouselQuadras" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="{% static 'reservas/img/quadras_areia_1.jpg' %}" alt="Quadras de areia">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="{% static 'reservas/img/quadras_areia_2.jpg' %}" alt="Rede de vôlei">
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselQuadras" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselQuadras" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="espaco-info">
+                            <h4>Quadras de Areia Premium</h4>
+                            <p>Duas quadras de alto padrão com areia selecionada, preparadas para Beach Tennis, Vôlei de Praia e Futevôlei. Espaço amplo e iluminação profissional para jogar até a noite.</p>
+                            <div class="espaco-features">
+                                <span class="feature-chip">🏖️ Areia selecionada</span>
+                                <span class="feature-chip">💡 Iluminação pro</span>
+                                <span class="feature-chip">🎾 Beach Tennis</span>
+                                <span class="feature-chip">⚽ Futevôlei</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Convivência -->
+                <div class="col-md-6">
+                    <div class="espaco-card h-100">
+                        <div class="espaco-img-wrapper">
+                            <div id="carouselConvivencia" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5500">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="{% static 'reservas/img/area_convivencia_1.jpg' %}" alt="Área de convivência">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="{% static 'reservas/img/area_convivencia_2.jpg' %}" alt="Bar e petiscos">
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselConvivencia" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselConvivencia" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="espaco-info">
+                            <h4>Área de Convivência</h4>
+                            <p>O melhor lugar para o seu pós-jogo! Bebidas geladas, petiscos variados e um ambiente descontraído para resenhar com a galera enquanto recupera as energias.</p>
+                            <div class="espaco-features">
+                                <span class="feature-chip">🍺 Bebidas geladas</span>
+                                <span class="feature-chip">🍟 Petiscos</span>
+                                <span class="feature-chip">😎 Ambiente descontraído</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         RODAPÉ / CONTATO
+    ============================================================ -->
     <section id="contato" class="contact-section">
         <div class="container">
-            <div class="row contact-info align-items-center">
-                <div class="col-md-6 col-lg-4 d-flex align-items-center mb-5 mb-md-0">
-                    <div>
-                        <h3>Contato</h3>
-                        <br>
-                        <p>@ibituruna_beach</p>
-                        <p>Rua fulano nº000 bairro Ibituruna.</p>
-                        <p>Montes Claros MG</p>
-                        <p>tel. 38 9999-9999</p>
-                        <p>ibituruna.beach@email.com</p>
+            <div class="row align-items-center g-5">
+
+                <div class="col-md-6">
+                    <h3>Fale com a Gente</h3>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <span>Rua Fulano nº 000 — Bairro Ibituruna, Montes Claros / MG</span>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <span>(38) 9999-9999</span>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <span>ibituruna.beach@email.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📸</div>
+                        <span>@ibituruna_beach</span>
+                    </div>
+
+                    <a href="https://wa.me/5538999999999" target="_blank" class="wpp-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        Falar pelo WhatsApp
+                    </a>
+                </div>
+
+                <div class="col-md-6 text-center d-none d-md-block">
+                    <!-- Mapa decorativo ou segunda coluna de info -->
+                    <div style="
+                        background: rgba(111,66,193,0.07);
+                        border-radius: var(--radius-card);
+                        padding: 48px 32px;
+                        border: 1.5px dashed rgba(111,66,193,0.20);
+                    ">
+                        <div style="font-size: 3.5rem; margin-bottom: 16px;">🏖️</div>
+                        <p style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--roxo-escuro); margin-bottom: 8px;">Aberto todos os dias</p>
+                        <p style="color: var(--cinza-suave); font-size: 0.9rem; margin: 0;">Das 08h às 22h<br>com iluminação profissional</p>
                     </div>
                 </div>
-                </div>
+
+            </div>
+
+            <div class="footer-divider"></div>
+            <p class="footer-bottom">© 2026 Arena Ibituruna Beach — Montes Claros / MG. Todos os direitos reservados.</p>
         </div>
     </section>
 

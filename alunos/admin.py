@@ -1,21 +1,42 @@
 from django.contrib import admin
-from .models import Aluno, Pagamento # <-- Trazemos o Pagamento para a luz do dia
+from .models import Aluno, Pagamento
 
 @admin.register(Aluno)
 class AlunoAdmin(admin.ModelAdmin):
-    # Adicionamos o valor_mensalidade e dia_vencimento aqui na lista visual!
     list_display = ('nome', 'quadra', 'get_dia_da_semana_display', 'horario', 'valor_mensalidade', 'dia_vencimento', 'ativo')
     list_filter = ('ativo', 'dia_da_semana', 'quadra')
     search_fields = ('nome', 'whatsapp')
 
-# --- NOVA SEÇÃO DE PAGAMENTOS ---
+    fieldsets = (
+        ('👤 Dados do Aluno', {
+            'fields': ('nome', 'whatsapp', 'ativo')
+        }),
+        ('📅 Agenda Fixa', {
+            'fields': ('quadra', 'dia_da_semana', 'horario'),
+            'description': 'Atenção: alterar o horário aqui bloqueia automaticamente no agendamento.'
+        }),
+        ('💰 Financeiro', {
+            'fields': ('valor_mensalidade', 'dia_vencimento')
+        }),
+    )
+
 @admin.register(Pagamento)
 class PagamentoAdmin(admin.ModelAdmin):
-    # O que você vai bater o olho e ver na lista
     list_display = ('aluno', 'mes_referencia', 'valor', 'pago', 'data_criacao')
-    
-    # Filtros super úteis: "Quero ver só quem NÃO pagou" ou "Só os pagamentos de Março"
-    list_filter = ('pago', 'mes_referencia')
-    
-    # Barra de pesquisa para buscar pelo nome do aluno devedor (o duplo underline é a mágica do Django para buscar em outra tabela)
+    list_filter = ('pago', 'mes_referencia', 'aluno__quadra')
     search_fields = ('aluno__nome',)
+    ordering = ('pago', 'aluno__nome')
+
+    # Permite editar com apenas 1 clique direto na lista
+    list_editable = ('pago',)
+    actions = ['marcar_como_pago', 'marcar_como_pendente']
+
+    @admin.action(description='✅ Marcar selecionados como PAGO')
+    def marcar_como_pago(self, request, queryset):
+        atualizados = queryset.update(pago=True)
+        self.message_user(request, f'{atualizados} pagamento(s) marcado(s) como pago.')
+
+    @admin.action(description='❌ Marcar selecionados como PENDENTE')
+    def marcar_como_pendente(self, request, queryset):
+        atualizados = queryset.update(pago=False)
+        self.message_user(request, f'{atualizados} pagamento(s) revertido(s) para pendente.')
