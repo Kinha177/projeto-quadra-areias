@@ -110,53 +110,92 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # ==========================================
 # CONFIGURAÇÕES DO PAINEL ADMIN (JAZZMIN)
 # ==========================================
 JAZZMIN_SETTINGS = {
-    # Título da aba do navegador
-    "site_title": "Arena Admin",
-    
-    # Título na tela de login
-    "site_header": "Arena Ibituruna Beach",
-    
-    # Nome da marca no topo do menu lateral
-    "site_brand": "Arena Ibituruna",
-    
-    # A sua logo que acabamos de colocar no sistema!
-    "site_logo": "reservas/img/logo_oficial.png",
-    
-    # Mensagem de boas vindas na tela de login
-    "welcome_sign": "Bem-vindo ao sistema de gestão da Arena",
-    
-    # Deixar o menu lateral sempre aberto
-    "show_sidebar": True,
-    
-    # Menu superior (links rápidos)
+    # ---- Identidade ----
+    "site_title":   "Arena Admin",
+    "site_header":  "Arena Ibituruna Beach",
+    "site_brand":   "Arena Ibituruna",
+    "site_logo":    "reservas/img/logo_oficial.png",
+    "site_logo_classes": "img-fluid",
+    "site_icon":    "reservas/img/logo_oficial.png",  # favicon
+    "welcome_sign": "Bem-vindo ao sistema de gestão 🏐",
+ 
+    # ---- Links rápidos no topo (rotina diária do dono) ----
     "topmenu_links": [
-        {"name": "Ver o Site", "url": "/", "permissions": ["auth.view_user"]},
-        {"name": "Painel Financeiro", "url": "/financeiro/"},
+        {"name": "🌐 Ver o Site",          "url": "/",            "new_window": True},
+        {"name": "📊 Painel Financeiro",   "url": "/financeiro/"},
+        {"name": "📅 Grade de Horários",   "url": "/agendamento/","new_window": True},
     ],
+ 
+    # ---- Ícones por model (FontAwesome 5, já incluso no Jazzmin) ----
+    "icons": {
+        "auth":             "fas fa-users-cog",
+        "auth.user":        "fas fa-user-shield",
+        "auth.group":       "fas fa-users",
+        "alunos.Aluno":     "fas fa-user-graduate",
+        "alunos.Pagamento": "fas fa-dollar-sign",
+        "quadras.Quadra":   "fas fa-volleyball-ball",
+        "reservas.Reserva": "fas fa-calendar-check",
+    },
+    "default_icon_parents":  "fas fa-chevron-right",
+    "default_icon_children": "fas fa-circle",
+ 
+    # ---- Ordem do menu lateral (do mais usado ao menos usado) ----
+    "order_with_respect_to": [
+        "alunos.Pagamento",   # 1. Registra pagamentos todo dia
+        "reservas.Reserva",   # 2. Confere quem reservou
+        "alunos.Aluno",       # 3. Cadastra/edita mensalistas
+        "quadras.Quadra",     # 4. Raramente muda
+        "auth",               # 5. Só quando cria novo usuário
+    ],
+ 
+    # ---- Comportamento do painel ----
+    "show_sidebar":              True,
+    "navigation_expanded":       True,
+    "related_modal_active":      True,   # edita FK em modal — sem sair da página
+    "show_ui_builder":           False,  # remove o builder em produção
+    "changeform_format":         "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user":  "collapsible",
+        "auth.group": "vertical_tabs",
+    },
+ 
+    # CSS personalizado (arquivo que vamos criar no próximo passo)
+    "custom_css": "reservas/css/jazzmin_custom.css",
 }
-
+ 
+ 
 JAZZMIN_UI_TWEAKS = {
-    "navbar": "navbar-dark",
-    "theme": "lumen",
-    "sidebar": "sidebar-dark-primary",
-    "sidebar_nav_child_indent": False,
+    # Navbar escura para contraste com o roxo
+    "navbar":       "navbar-dark",
+ 
+    # Tema base mais neutro — o CSS customizado vai sobrescrever as cores
+    "theme":        "darkly",          # darkly dá uma base escura elegante
+ 
+    # Sidebar escura com a cor primária
+    "sidebar":                  "sidebar-dark-primary",
+    "sidebar_nav_child_indent": True,
     "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme_color": "default",
-    "dark_mode_theme": None,
+    "sidebar_nav_legacy_style":  False,
+    "sidebar_nav_flat_style":    False,
+ 
+    # Botões — todos alinhados com a marca
     "button_classes": {
-        "primary": "btn-primary",
+        "primary":   "btn-primary",
         "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
+        "info":      "btn-info",
+        "warning":   "btn-warning",
+        "danger":    "btn-danger",
+        "success":   "btn-success",
+    },
+ 
+    # Sticky no topo ao rolar — o botão Salvar nunca some
+    "actions_sticky_top": True,
 }
 
 # ==========================================

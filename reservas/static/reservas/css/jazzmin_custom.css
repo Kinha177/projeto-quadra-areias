@@ -1,0 +1,398 @@
+/*
+ * ================================================================
+ * ENTREGÁVEL 3 — jazzmin_custom.css
+ *
+ * Caminho no projeto:
+ *   reservas/static/reservas/css/jazzmin_custom.css
+ *
+ * Referenciado no settings.py como:
+ *   "custom_css": "reservas/css/jazzmin_custom.css"
+ *
+ * O que esse arquivo faz:
+ *   Injeta a identidade visual da Arena (roxo #6F42C1) em toda a
+ *   interface do Django Admin com Jazzmin, substituindo o azul
+ *   padrão do Bootstrap/AdminLTE sem precisar editar arquivos core.
+ * ================================================================
+ */
+
+/* ----------------------------------------------------------------
+   VARIÁVEIS DA MARCA — definem tudo em um lugar só
+---------------------------------------------------------------- */
+:root {
+    --arena-roxo:        #6F42C1;
+    --arena-roxo-hover:  #5A32A3;
+    --arena-roxo-deep:   #3D1F8A;
+    --arena-roxo-light:  rgba(111, 66, 193, 0.12);
+    --arena-roxo-glow:   rgba(111, 66, 193, 0.30);
+    --arena-sidebar-bg:  #1e1033;   /* roxo quase preto — sofisticado */
+    --arena-sidebar-mid: #2a1a4a;
+    --arena-ciano:       #E6F7FF;
+    --arena-verde:       #059669;
+}
+
+/* ================================================================
+   1. BARRA LATERAL (Sidebar)
+================================================================ */
+
+/* Fundo da sidebar */
+.main-sidebar,
+.main-sidebar .sidebar {
+    background: var(--arena-sidebar-bg) !important;
+}
+
+/* Logo / brand no topo da sidebar */
+.brand-link {
+    background: var(--arena-sidebar-bg) !important;
+    border-bottom: 1px solid rgba(111,66,193,0.25) !important;
+}
+.brand-link:hover {
+    background: var(--arena-sidebar-mid) !important;
+}
+.brand-text {
+    color: #fff !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+}
+
+/* Links do menu */
+.nav-sidebar .nav-link {
+    color: rgba(255,255,255,0.68) !important;
+    border-radius: 8px;
+    margin: 2px 10px;
+    padding: 9px 14px !important;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.18s ease !important;
+}
+.nav-sidebar .nav-link:hover {
+    color: #fff !important;
+    background: rgba(111,66,193,0.25) !important;
+}
+
+/* Item ativo / selecionado */
+.nav-sidebar .nav-item .nav-link.active,
+.nav-sidebar > .nav-item.menu-open > .nav-link {
+    color: #fff !important;
+    background: var(--arena-roxo) !important;
+    box-shadow: 0 4px 14px rgba(111,66,193,0.45) !important;
+}
+
+/* Ícones nos links */
+.nav-sidebar .nav-link .nav-icon {
+    color: rgba(255,255,255,0.45) !important;
+    transition: color 0.18s;
+}
+.nav-sidebar .nav-link:hover .nav-icon,
+.nav-sidebar .nav-link.active .nav-icon {
+    color: rgba(255,255,255,0.95) !important;
+}
+
+/* Sub-menus expandidos */
+.nav-sidebar .nav-treeview {
+    background: rgba(0,0,0,0.15) !important;
+    border-radius: 8px;
+    margin: 2px 10px;
+    padding: 4px 0;
+}
+.nav-sidebar .nav-treeview .nav-link {
+    color: rgba(255,255,255,0.55) !important;
+    font-size: 0.83rem;
+    padding: 7px 14px 7px 32px !important;
+}
+.nav-sidebar .nav-treeview .nav-link:hover {
+    color: #fff !important;
+    background: rgba(111,66,193,0.20) !important;
+}
+.nav-sidebar .nav-treeview .nav-link.active {
+    color: #fff !important;
+    background: rgba(111,66,193,0.35) !important;
+}
+
+/* Cabeçalho de seção no menu (ex: "ALUNOS", "AUTENTICAÇÃO") */
+.nav-header {
+    color: rgba(255,255,255,0.30) !important;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
+    padding: 16px 24px 4px !important;
+}
+
+/* ================================================================
+   2. TOPBAR (Navbar superior)
+================================================================ */
+
+.main-header.navbar {
+    background: var(--arena-sidebar-bg) !important;
+    border-bottom: 1px solid rgba(111,66,193,0.20) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
+}
+
+/* Links do top menu */
+.navbar-nav .nav-link {
+    color: rgba(255,255,255,0.75) !important;
+    font-weight: 500;
+    font-size: 0.87rem;
+    transition: color 0.18s;
+}
+.navbar-nav .nav-link:hover {
+    color: #fff !important;
+}
+
+/* Botão de toggle da sidebar */
+.nav-link[data-widget="pushmenu"] {
+    color: rgba(255,255,255,0.75) !important;
+}
+.nav-link[data-widget="pushmenu"]:hover {
+    color: #fff !important;
+}
+
+/* ================================================================
+   3. CONTEÚDO PRINCIPAL — wrapper
+================================================================ */
+
+.content-wrapper {
+    background: var(--arena-ciano) !important;
+}
+
+/* Breadcrumb / cabeçalho da página interna */
+.content-header {
+    background: rgba(230,247,255,0.60);
+    border-bottom: 1px solid rgba(111,66,193,0.08);
+    padding: 20px 28px !important;
+}
+.content-header h1 {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
+}
+.breadcrumb-item a {
+    color: var(--arena-roxo) !important;
+}
+.breadcrumb-item.active {
+    color: #6b7280 !important;
+}
+
+/* ================================================================
+   4. BOTÕES — substituindo azul Bootstrap pelo roxo da Arena
+================================================================ */
+
+/* Botão primário */
+.btn-primary {
+    background-color: var(--arena-roxo) !important;
+    border-color: var(--arena-roxo) !important;
+    box-shadow: 0 4px 14px var(--arena-roxo-glow) !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    transition: all 0.22s ease !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--arena-roxo-hover) !important;
+    border-color: var(--arena-roxo-hover) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(111,66,193,0.45) !important;
+}
+
+/* Botão de salvar (Submit) no formulário */
+input[type="submit"].btn-primary,
+button[type="submit"].btn-primary {
+    background: linear-gradient(135deg, var(--arena-roxo) 0%, #8B5CF6 100%) !important;
+    border: none !important;
+    padding: 10px 28px !important;
+    font-size: 0.9rem !important;
+    letter-spacing: 0.02em !important;
+}
+
+/* Botão outline */
+.btn-outline-primary {
+    color: var(--arena-roxo) !important;
+    border-color: var(--arena-roxo) !important;
+    border-radius: 8px !important;
+}
+.btn-outline-primary:hover {
+    background-color: var(--arena-roxo) !important;
+    color: #fff !important;
+}
+
+/* ================================================================
+   5. CARDS E CAIXAS DO ADMIN
+================================================================ */
+
+/* Cards de estatística no dashboard inicial */
+.info-box {
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(111,66,193,0.10), 0 1px 4px rgba(0,0,0,0.04) !important;
+    border: 1px solid rgba(111,66,193,0.07) !important;
+    overflow: hidden;
+}
+.info-box-icon {
+    border-radius: 16px 0 0 16px !important;
+}
+
+/* Card padrão (ex: nas change forms) */
+.card {
+    border-radius: 16px !important;
+    border: 1px solid rgba(111,66,193,0.08) !important;
+    box-shadow: 0 4px 20px rgba(111,66,193,0.08) !important;
+}
+.card-header {
+    background: rgba(111,66,193,0.04) !important;
+    border-bottom: 1.5px solid rgba(111,66,193,0.08) !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #1a1a2e !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+/* ================================================================
+   6. TABELAS DO ADMIN (listview)
+================================================================ */
+
+/* Cabeçalho da tabela */
+#result_list thead th,
+#result_list thead th a {
+    color: var(--arena-roxo) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.09em !important;
+    text-transform: uppercase !important;
+}
+
+/* Linhas alternadas sutis */
+#result_list tbody tr:nth-child(even) {
+    background: rgba(111,66,193,0.025) !important;
+}
+#result_list tbody tr:hover {
+    background: rgba(111,66,193,0.06) !important;
+}
+
+/* Checkbox selecionado */
+#result_list tbody tr.selected {
+    background: rgba(111,66,193,0.10) !important;
+}
+
+/* Paginação */
+.paginator a {
+    color: var(--arena-roxo) !important;
+    font-weight: 600;
+}
+.paginator .this-page {
+    background: var(--arena-roxo) !important;
+    color: white !important;
+    border-radius: 6px;
+    padding: 2px 10px;
+}
+
+/* ================================================================
+   7. FORMULÁRIOS (change form / add form)
+================================================================ */
+
+/* Labels */
+.form-row label,
+.field-box label,
+fieldset legend {
+    color: #374151 !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Inputs em foco */
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--arena-roxo) !important;
+    box-shadow: 0 0 0 3px rgba(111,66,193,0.14) !important;
+    outline: none !important;
+}
+
+/* Tabs do changeform */
+.nav-tabs .nav-link.active {
+    color: var(--arena-roxo) !important;
+    border-bottom: 2px solid var(--arena-roxo) !important;
+    font-weight: 700 !important;
+}
+.nav-tabs .nav-link:hover {
+    color: var(--arena-roxo-hover) !important;
+}
+
+/* ================================================================
+   8. ALERTS E MENSAGENS DE SUCESSO
+================================================================ */
+
+.alert-success,
+.messages .success {
+    background: rgba(5,150,105,0.08) !important;
+    border: 1px solid rgba(5,150,105,0.25) !important;
+    color: #065f46 !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+}
+
+.alert-warning {
+    background: rgba(217,119,6,0.08) !important;
+    border: 1px solid rgba(217,119,6,0.25) !important;
+    color: #92400e !important;
+    border-radius: 10px !important;
+}
+
+.alert-error,
+.alert-danger {
+    background: rgba(220,38,38,0.07) !important;
+    border: 1px solid rgba(220,38,38,0.22) !important;
+    color: #991b1b !important;
+    border-radius: 10px !important;
+}
+
+/* ================================================================
+   9. CHECKBOX DO list_editable (para marcar pagamentos)
+================================================================ */
+
+/* Destaque visual no checkbox da coluna "pago" */
+#result_list input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--arena-roxo);
+    cursor: pointer;
+}
+
+/* ================================================================
+   10. BOTÃO DE LOGIN
+================================================================ */
+
+.login-page .login-card-body,
+#login-form .submit-row input[type="submit"] {
+    background: var(--arena-roxo) !important;
+    border-color: var(--arena-roxo) !important;
+}
+
+.login-box-msg {
+    color: rgba(255,255,255,0.80) !important;
+}
+
+/* ================================================================
+   11. LINKS GERAIS — substitui azul default pelo roxo
+================================================================ */
+
+a {
+    color: var(--arena-roxo);
+}
+a:hover {
+    color: var(--arena-roxo-hover);
+}
+
+/* Exceção: links na sidebar e topbar (tratados acima com !important) */
+
+/* ================================================================
+   12. SCROLLBAR customizada (webkit)
+================================================================ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(111,66,193,0.30);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(111,66,193,0.55);
+}
