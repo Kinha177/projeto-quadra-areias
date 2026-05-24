@@ -8,748 +8,467 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* ============================================================
-           DESIGN SYSTEM — GRADE DE AGENDAMENTO
-           Conceito: "Court Dashboard" — funcional, premium, mobile-first
-        ============================================================ */
-
         :root {
-            --ciano-bg:         #E6F7FF;
-            --roxo-escuro:      #6F42C1;
-            --roxo-hover:       #5A32A3;
-            --roxo-glow:        rgba(111, 66, 193, 0.18);
-            --roxo-ultra:       rgba(111, 66, 193, 0.06);
-            --verde-lima-bg:    #ECF9E3;
-            --verde-acento:     #52C41A;
-            --cinza-texto:      #1a1a2e;
-            --cinza-suave:      #6b7280;
-            --branco:           #ffffff;
-
-            /* Slot de horário: LIVRE */
-            --slot-livre-bg:       #ffffff;
-            --slot-livre-border:   rgba(111,66,193,0.30);
-            --slot-livre-txt:      var(--roxo-escuro);
-            --slot-livre-shadow:   0 2px 10px rgba(111,66,193,0.12);
-            --slot-livre-hover-bg: var(--roxo-escuro);
-            --slot-livre-hover-shadow: 0 6px 20px rgba(111,66,193,0.40);
-
-            /* Slot de horário: OCUPADO */
-            --slot-ocup-bg:     rgba(220,53,69,0.06);
-            --slot-ocup-border: rgba(220,53,69,0.20);
-            --slot-ocup-txt:    rgba(180, 40, 55, 0.60);
-
-            /* Slot de horário: ESGOTADO (passado) */
-            --slot-esg-bg:      transparent;
-            --slot-esg-border:  rgba(0,0,0,0.06);
-            --slot-esg-txt:     rgba(0,0,0,0.18);
-
-            --shadow-card:   0 4px 24px rgba(111,66,193,0.10), 0 1px 4px rgba(0,0,0,0.04);
-            --shadow-hover:  0 12px 40px rgba(111,66,193,0.22), 0 2px 8px rgba(0,0,0,0.06);
-            --radius-card:   24px;
-            --radius-btn:    50px;
+            --roxo:       #6F42C1;
+            --roxo-hover: #5A32A3;
+            --roxo-glass: rgba(111,66,193,.10);
+            --roxo-glow:  rgba(111,66,193,.28);
+            --ciano-bg:   #E6F7FF;
+            --cinza-texto:#111827;
+            --cinza-suave:#6B7280;
+            --branco:     #ffffff;
+            --verde:      #059669;
+            --vermelho:   #DC2626;
+            --shadow-sm:  0 2px 8px rgba(111,66,193,.08),0 1px 2px rgba(0,0,0,.04);
+            --shadow-md:  0 6px 24px rgba(111,66,193,.13),0 2px 6px rgba(0,0,0,.04);
+            --shadow-btn: 0 4px 16px rgba(111,66,193,.40);
+            --r-md: 16px; --r-lg:22px; --r-pill:50px;
+        }
+        *,*::before,*::after{box-sizing:border-box;}
+        body{
+            background:var(--ciano-bg);
+            font-family:'DM Sans',sans-serif;
+            color:var(--cinza-texto);
+            -webkit-font-smoothing:antialiased;
+            min-height:100vh;
+        }
+        body::after{
+            content:'';position:fixed;top:-100px;right:-100px;
+            width:500px;height:500px;
+            background:radial-gradient(circle,rgba(111,66,193,.07),transparent 65%);
+            border-radius:50%;pointer-events:none;z-index:0;
         }
 
-        *, *::before, *::after { box-sizing: border-box; }
+        /* ── TIPOGRAFIA ──────────────────────────────────────── */
+        .arena-title{
+            font-family:'Anton',sans-serif;
+            font-weight:400;letter-spacing:.03em;
+            line-height:1.05;text-transform:uppercase;
+        }
+        .title-texture      { filter:url(#grunge);       }
+        .title-texture-light{ filter:url(#grunge-light); }
+        .title-lg { font-size:clamp(1.8rem,4vw,2.8rem);  }
+        .title-md { font-size:clamp(1.3rem,2.5vw,1.8rem);}
+        .title-sm { font-size:clamp(1rem,2vw,1.25rem);   }
+        .title-accent { color:var(--roxo); }
 
-        body {
-            background-color: var(--ciano-bg);
-            font-family: 'DM Sans', sans-serif;
-            color: var(--cinza-texto);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
 
-        /* Orbes de profundidade */
-        body::after {
-            content: '';
-            position: fixed;
-            top: -100px; right: -100px;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(111,66,193,0.07) 0%, transparent 65%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ============================================================
-           NAVBAR
-        ============================================================ */
-        .navbar-arena {
-            position: relative;
-            z-index: 100;
-            padding: 18px 0;
-            background: rgba(230, 247, 255, 0.80);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(111,66,193,0.08);
-        }
-
-        .navbar-logo {
-            height: 56px;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-        .navbar-logo:hover { transform: scale(1.04); }
-        @media (min-width: 992px) { .navbar-logo { height: 100px; } }
-
-        .btn-arena {
-            background: var(--roxo-escuro);
-            color: var(--branco);
-            border: none;
-            border-radius: var(--radius-btn);
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            font-size: 0.875rem;
-            padding: 10px 22px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 14px rgba(111,66,193,0.35);
-            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .btn-arena:hover {
-            background: var(--roxo-hover);
-            color: var(--branco);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(111,66,193,0.45);
-        }
-
-        /* ============================================================
-           CABEÇALHO DA PÁGINA
-        ============================================================ */
-        .page-header {
-            position: relative;
-            z-index: 1;
-            padding: 48px 0 0;
-            text-align: center;
-        }
-        .page-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--roxo-escuro);
-            opacity: 0.65;
-            margin-bottom: 10px;
-        }
-        .page-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: clamp(1.9rem, 4vw, 2.8rem);
-            color: var(--cinza-texto);
-            letter-spacing: -0.025em;
-            line-height: 1.1;
-            margin-bottom: 8px;
-        }
-        .page-title span {
-            color: var(--roxo-escuro);
-        }
-        .page-subtitle {
-            font-size: 0.95rem;
-            color: var(--cinza-suave);
+        /* ═══ SISTEMA TIPOGRÁFICO — Anton + CSS Grunge ═══════════
+           ::before + SVG noise data-URI + mix-blend-mode:multiply
+        ═══════════════════════════════════════════════════════ */
+        .arena-title {
+            font-family: 'Anton', sans-serif;
             font-weight: 400;
-            margin: 0;
-        }
-
-        /* ============================================================
-           SELETOR DE DATA
-        ============================================================ */
-        .date-picker-section {
-            position: relative;
-            z-index: 1;
-            padding: 36px 0 40px;
-        }
-
-        .date-picker-wrapper {
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .date-card {
-            background: var(--branco);
-            border-radius: 20px;
-            padding: 20px 24px;
-            box-shadow: var(--shadow-card);
-            border: 1.5px solid rgba(111,66,193,0.10);
-        }
-
-        .date-card label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.04em;
+            line-height: 1.05;
             text-transform: uppercase;
-            color: var(--cinza-suave);
-            margin-bottom: 10px;
-        }
-
-        .date-input-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        input[type="date"].date-input {
-            flex: 1;
-            border: 1.5px solid rgba(111,66,193,0.20);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--roxo-escuro);
-            background: var(--ciano-bg);
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-        input[type="date"].date-input:focus {
-            border-color: var(--roxo-escuro);
-            box-shadow: 0 0 0 3px rgba(111,66,193,0.12);
-        }
-
-        .btn-date-submit {
-            background: var(--roxo-escuro);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(111,66,193,0.35);
-            transition: all 0.22s ease;
-            white-space: nowrap;
-        }
-        .btn-date-submit:hover {
-            background: var(--roxo-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Pill de data selecionada */
-        .selected-date-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--roxo-escuro) 0%, #8B5CF6 100%);
-            color: white;
-            border-radius: 50px;
-            padding: 8px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 14px;
-            box-shadow: 0 4px 14px rgba(111,66,193,0.30);
-        }
-
-        /* ============================================================
-           LEGENDA DE STATUS
-        ============================================================ */
-        .legend-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            padding: 0 0 36px;
             position: relative;
-            z-index: 1;
+            display: inline-block;
         }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--cinza-suave);
-        }
-        .legend-dot {
-            width: 10px; height: 10px;
-            border-radius: 3px;
-        }
-        .legend-dot.livre   { background: var(--roxo-escuro); }
-        .legend-dot.ocupado { background: rgba(220,53,69,0.45); }
-        .legend-dot.passado { background: rgba(0,0,0,0.12); }
-
-        /* ============================================================
-           CARDS DE QUADRA
-        ============================================================ */
-        .quadras-grid {
-            position: relative;
-            z-index: 1;
-            padding: 0 0 72px;
-        }
-
-        .quadra-card {
-            background: var(--branco);
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow-card);
-            border: 1px solid rgba(111,66,193,0.08);
-            overflow: hidden;
-            transition: box-shadow 0.3s ease;
-        }
-        .quadra-card:hover {
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* Header do card de quadra */
-        .quadra-card-header {
-            padding: 24px 28px 20px;
-            border-bottom: 1.5px solid rgba(111,66,193,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .quadra-card-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 1.15rem;
-            color: var(--cinza-texto);
-            margin: 0;
-        }
-        /* Badge de disponibilidade no header */
-        .availability-badge {
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 50px;
-        }
-        .availability-badge.has-slots {
-            background: rgba(82,196,26,0.12);
-            color: #3a7a12;
-            border: 1px solid rgba(82,196,26,0.25);
-        }
-        .availability-badge.no-slots {
-            background: rgba(0,0,0,0.05);
-            color: var(--cinza-suave);
-            border: 1px solid rgba(0,0,0,0.08);
-        }
-
-        /* Corpo do card — onde ficam os turnos */
-        .quadra-card-body {
-            padding: 24px 28px 28px;
-        }
-
-        /* ============================================================
-           TURNO (Manhã / Tarde / Noite)
-        ============================================================ */
-        .turno-section {
-            margin-bottom: 24px;
-        }
-        .turno-section:last-child { margin-bottom: 0; }
-
-        .turno-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.10em;
-            text-transform: uppercase;
-            color: var(--cinza-suave);
-            margin-bottom: 12px;
-        }
-        .turno-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(111,66,193,0.08);
-        }
-
-        /* ============================================================
-           SLOTS DE HORÁRIO
-        ============================================================ */
-        .slots-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        /* BASE: todos os slots */
-        .slot {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 72px;
-            height: 42px;
-            border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 700;
-            transition: all 0.20s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-decoration: none;
-            position: relative;
-            cursor: pointer;
-            letter-spacing: 0.02em;
-        }
-
-        /* LIVRE — o protagonista */
-        .slot-livre {
-            background: var(--slot-livre-bg);
-            color: var(--slot-livre-txt);
-            border: 1.5px solid var(--slot-livre-border);
-            box-shadow: var(--slot-livre-shadow);
-        }
-        .slot-livre:hover {
-            background: var(--slot-livre-hover-bg);
-            color: white;
-            border-color: var(--roxo-escuro);
-            box-shadow: var(--slot-livre-hover-shadow);
-            transform: translateY(-3px) scale(1.06);
-            text-decoration: none;
-        }
-        .slot-livre:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        /* Indicador de "pulsando" no slot livre (sutil) */
-        .slot-livre::before {
+        .arena-title.title-texture::before {
             content: '';
             position: absolute;
-            inset: -1px;
-            border-radius: 11px;
-            background: transparent;
-            border: 1.5px solid transparent;
-            transition: all 0.2s ease;
-        }
-        .slot-livre:hover::before {
-            border-color: rgba(111,66,193,0.20);
-            inset: -4px;
-        }
-
-        /* OCUPADO — fica claramente no background */
-        .slot-ocupado {
-            background: var(--slot-ocup-bg);
-            color: var(--slot-ocup-txt);
-            border: 1px solid var(--slot-ocup-border);
-            cursor: not-allowed;
+            inset: -2px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+            mix-blend-mode: multiply;
+            opacity: 0.38;
             pointer-events: none;
+            z-index: 1;
         }
-        /* Linha riscando o horário ocupado */
-        .slot-ocupado::after {
+        .arena-title.title-texture-light::before {
             content: '';
             position: absolute;
-            top: 50%; left: 10%; right: 10%;
-            height: 1.5px;
-            background: rgba(220,53,69,0.25);
-            transform: translateY(-50%);
-        }
-
-        /* ESGOTADO (passado) — quase invisível */
-        .slot-esgotado {
-            background: var(--slot-esg-bg);
-            color: var(--slot-esg-txt);
-            border: 1px dashed var(--slot-esg-border);
-            cursor: default;
+            inset: -2px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+            background-size: 140px 140px;
+            mix-blend-mode: multiply;
+            opacity: 0.22;
             pointer-events: none;
-        }
-        /* Linha de tachado no horário esgotado */
-        .slot-esgotado span {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
-
-        /* ============================================================
-           ESTADO VAZIO
-        ============================================================ */
-        .empty-state {
-            text-align: center;
-            padding: 60px 24px;
-        }
-        .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.4;
-        }
-        .empty-text {
-            font-size: 0.95rem;
-            color: var(--cinza-suave);
-        }
-
-        /* ============================================================
-           ANIMAÇÕES DE ENTRADA
-        ============================================================ */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .anim-in {
-            animation: fadeSlideUp 0.5s ease both;
-        }
-        /* Stagger nos cards */
-        .quadra-card:nth-child(1) { animation: fadeSlideUp 0.5s 0.05s ease both; }
-        .quadra-card:nth-child(2) { animation: fadeSlideUp 0.5s 0.15s ease both; }
-
-        /* Micro-animação no hover dos slots livres (ripple) */
-        @keyframes slot-ripple {
-            0%   { transform: scale(0.85); opacity: 0.6; }
-            100% { transform: scale(1.8);  opacity: 0; }
-        }
-
-        /* ============================================================
-           RESPONSIVIDADE
-        ============================================================ */
-        @media (max-width: 576px) {
-            .quadra-card-body   { padding: 20px 18px 24px; }
-            .quadra-card-header { padding: 18px 18px 14px; }
-            .slot {
-                width: 64px;
-                height: 40px;
-                font-size: 0.78rem;
-            }
-        }
-
-        /* ============================================================
-           RODAPÉ MÍNIMO
-        ============================================================ */
-        .page-footer {
-            position: relative;
             z-index: 1;
-            text-align: center;
-            padding: 20px 0 40px;
-            font-size: 0.78rem;
-            color: var(--cinza-suave);
-            border-top: 1px solid rgba(111,66,193,0.08);
         }
+        .title-xl { font-size: clamp(2.4rem, 6vw, 4.2rem);  }
+        .title-lg { font-size: clamp(1.8rem, 4vw, 2.8rem);   }
+        .title-md { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
+        .title-sm { font-size: clamp(1rem, 2vw, 1.25rem);    }
+        .title-accent { color: var(--roxo); }
+        .btn-arena, .btn-arena-ghost, .btn-cta-white, .btn-date-submit {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        /* ── NAVBAR ──────────────────────────────────────────── */
+        .navbar-arena{
+            position:relative;z-index:100;
+            padding:18px 0;
+            background:rgba(230,247,255,.82);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            border-bottom:1px solid rgba(111,66,193,.08);
+        }
+        .navbar-logo{height:56px;object-fit:contain;transition:transform .3s;}
+        .navbar-logo:hover{transform:scale(1.04);}
+        @media(min-width:992px){.navbar-logo{height:100px;}}
+
+        .btn-arena{
+            font-family:'Anton',sans-serif;
+            font-weight:400;letter-spacing:.06em;text-transform:uppercase;
+            font-size:.78rem;
+            background:var(--roxo);color:var(--branco);
+            border:none;border-radius:var(--r-pill);
+            padding:10px 22px;text-decoration:none;
+            display:inline-flex;align-items:center;gap:6px;
+            box-shadow:0 4px 14px rgba(111,66,193,.35);
+            transition:all .22s cubic-bezier(.34,1.56,.64,1);
+        }
+        .btn-arena:hover{
+            background:var(--roxo-hover);color:var(--branco);
+            transform:translateY(-2px);box-shadow:0 8px 24px rgba(111,66,193,.45);
+        }
+
+        /* ── CABEÇALHO DA PÁGINA ─────────────────────────────── */
+        .page-header{position:relative;z-index:1;padding:48px 0 0;text-align:center;}
+        .page-eyebrow{
+            font-size:.72rem;font-weight:700;letter-spacing:.14em;
+            text-transform:uppercase;color:var(--roxo);opacity:.65;margin-bottom:8px;
+        }
+        .page-subtitle{font-size:.95rem;color:var(--cinza-suave);font-weight:400;margin:0;}
+
+        /* ── SELETOR DE DATA ─────────────────────────────────── */
+        .date-picker-section{position:relative;z-index:1;padding:36px 0 40px;}
+        .date-picker-wrapper{max-width:480px;margin:0 auto;}
+        .date-card{
+            background:var(--branco);border-radius:20px;
+            padding:20px 24px;box-shadow:var(--shadow-md);
+            border:1.5px solid rgba(111,66,193,.10);
+        }
+        .date-card label{
+            display:block;font-size:.75rem;font-weight:700;
+            letter-spacing:.08em;text-transform:uppercase;
+            color:var(--cinza-suave);margin-bottom:10px;
+        }
+        .date-input-row{display:flex;align-items:center;gap:12px;}
+        input[type="date"].date-input{
+            flex:1;border:1.5px solid rgba(111,66,193,.20);
+            border-radius:12px;padding:12px 16px;
+            font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;
+            color:var(--roxo);background:var(--ciano-bg);
+            outline:none;cursor:pointer;
+            transition:border-color .2s,box-shadow .2s;
+            appearance:none;-webkit-appearance:none;
+        }
+        input[type="date"].date-input:focus{
+            border-color:var(--roxo);
+            box-shadow:0 0 0 3px rgba(111,66,193,.12);
+        }
+        .btn-date-submit{
+            background:var(--roxo);color:white;border:none;
+            border-radius:12px;padding:12px 20px;
+            font-family:'Anton',sans-serif;
+            font-weight:400;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+            cursor:pointer;box-shadow:0 4px 14px rgba(111,66,193,.35);
+            transition:all .22s ease;white-space:nowrap;
+        }
+        .btn-date-submit:hover{background:var(--roxo-hover);transform:translateY(-1px);}
+        .selected-date-pill{
+            display:inline-flex;align-items:center;gap:8px;
+            background:linear-gradient(135deg,var(--roxo) 0%,#8B5CF6 100%);
+            color:white;border-radius:50px;padding:8px 20px;
+            font-size:.85rem;font-weight:600;margin-top:14px;
+            box-shadow:0 4px 14px rgba(111,66,193,.30);
+        }
+
+        /* ── LEGENDA ─────────────────────────────────────────── */
+        .legend-bar{
+            display:flex;align-items:center;justify-content:center;
+            gap:20px;flex-wrap:wrap;padding:0 0 36px;
+            position:relative;z-index:1;
+        }
+        .legend-item{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--cinza-suave);}
+        .legend-dot{width:10px;height:10px;border-radius:3px;}
+        .legend-dot.livre   { background:var(--roxo); }
+        .legend-dot.ocupado { background:rgba(220,38,38,.45); }
+        .legend-dot.passado { background:rgba(0,0,0,.12); }
+
+        /* ── CARDS DE QUADRA ─────────────────────────────────── */
+        .quadras-grid{position:relative;z-index:1;padding:0 0 72px;}
+        .quadra-card{
+            background:var(--branco);border-radius:var(--r-lg);
+            box-shadow:var(--shadow-md);border:1px solid rgba(111,66,193,.08);
+            overflow:hidden;transition:box-shadow .3s;
+        }
+        .quadra-card:hover{box-shadow:0 12px 40px rgba(111,66,193,.22),0 2px 8px rgba(0,0,0,.06);}
+        .quadra-card-header{
+            padding:24px 28px 20px;
+            border-bottom:1.5px solid rgba(111,66,193,.06);
+            display:flex;align-items:center;justify-content:space-between;
+        }
+        .avail-badge{
+            font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:50px;
+            background:rgba(82,196,26,.12);color:#3a7a12;
+            border:1px solid rgba(82,196,26,.25);
+        }
+        .quadra-card-body{padding:24px 28px 28px;}
+
+        /* ── TURNOS ──────────────────────────────────────────── */
+        .turno-section{margin-bottom:24px;}
+        .turno-section:last-child{margin-bottom:0;}
+        .turno-label{
+            display:flex;align-items:center;gap:8px;
+            font-size:.72rem;font-weight:700;letter-spacing:.10em;
+            text-transform:uppercase;color:var(--cinza-suave);margin-bottom:12px;
+        }
+        .turno-label::after{content:'';flex:1;height:1px;background:rgba(111,66,193,.08);}
+        .slots-wrapper{display:flex;flex-wrap:wrap;gap:8px;}
+
+        /* ── SLOTS ───────────────────────────────────────────── */
+        .slot{
+            display:inline-flex;align-items:center;justify-content:center;
+            width:72px;height:42px;border-radius:10px;
+            font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;
+            transition:all .20s cubic-bezier(.34,1.56,.64,1);
+            text-decoration:none;position:relative;letter-spacing:.02em;
+        }
+        /* Livre */
+        .slot-livre{
+            background:#fff;color:var(--roxo);
+            border:1.5px solid rgba(111,66,193,.30);
+            box-shadow:0 2px 10px rgba(111,66,193,.12);
+        }
+        .slot-livre:hover{
+            background:var(--roxo);color:white;
+            border-color:var(--roxo);
+            box-shadow:0 6px 20px rgba(111,66,193,.40);
+            transform:translateY(-3px) scale(1.06);
+            text-decoration:none;
+        }
+        .slot-livre::before{
+            content:'';position:absolute;inset:-1px;border-radius:11px;
+            border:1.5px solid transparent;transition:all .2s;
+        }
+        .slot-livre:hover::before{border-color:rgba(111,66,193,.20);inset:-4px;}
+        /* Ocupado */
+        .slot-ocupado{
+            background:rgba(220,38,38,.06);color:rgba(180,40,55,.60);
+            border:1px solid rgba(220,38,38,.20);cursor:not-allowed;pointer-events:none;
+        }
+        .slot-ocupado::after{
+            content:'';position:absolute;top:50%;left:10%;right:10%;
+            height:1.5px;background:rgba(220,38,38,.25);transform:translateY(-50%);
+        }
+        /* Esgotado */
+        .slot-esgotado{
+            background:transparent;color:rgba(0,0,0,.18);
+            border:1px dashed rgba(0,0,0,.06);
+            cursor:default;pointer-events:none;
+        }
+        .slot-esgotado span{text-decoration:line-through;opacity:.5;}
+
+        /* ── ESTADO VAZIO ────────────────────────────────────── */
+        .empty-state{text-align:center;padding:60px 24px;}
+        .empty-icon{font-size:3rem;opacity:.35;margin-bottom:16px;}
+        .empty-text{font-size:.95rem;color:var(--cinza-suave);}
+
+        /* ── ANIMAÇÕES ──────────────────────────────────────── */
+        @keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        .anim-in{animation:fadeSlideUp .5s ease both;}
+        .quadra-card:nth-child(1){animation:fadeSlideUp .5s .05s ease both;}
+        .quadra-card:nth-child(2){animation:fadeSlideUp .5s .15s ease both;}
+
+        /* ── RESPONSIVIDADE ─────────────────────────────────── */
+        @media(max-width:576px){
+            .quadra-card-body,.quadra-card-header{padding:18px;}
+            .slot{width:64px;height:40px;font-size:.78rem;}
+        }
+
+        /* ── RODAPÉ ──────────────────────────────────────────── */
+        .page-footer{
+            position:relative;z-index:1;text-align:center;
+            padding:20px 0 40px;font-size:.78rem;color:var(--cinza-suave);
+            border-top:1px solid rgba(111,66,193,.08);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar{width:5px;}
+        ::-webkit-scrollbar-track{background:transparent;}
+        ::-webkit-scrollbar-thumb{background:rgba(111,66,193,.22);border-radius:3px;}
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-         NAVBAR
-    ============================================================ -->
-    <nav class="navbar-arena">
-        <div class="container d-flex align-items-center">
+<!-- NAVBAR -->
+<nav class="navbar-arena">
+    <div class="container d-flex align-items-center">
+        <a class="me-auto d-lg-none" href="/"><img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo"></a>
+        <div class="d-none d-lg-block" style="flex:1;"></div>
+        <a class="mx-auto d-none d-lg-flex" href="/"><img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo"></a>
+        <div class="d-flex justify-content-end" style="flex:1;">
+            <a href="/" class="btn-arena">← Início</a>
+        </div>
+    </div>
+</nav>
 
-            <a class="me-auto d-lg-none" href="/">
-                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
-            </a>
+<!-- CABEÇALHO -->
+<div class="page-header anim-in">
+    <p class="page-eyebrow">Reserve sua quadra</p>
+    <h1 class="arena-title title-lg title-texture" style="color:var(--cinza-texto);">
+        Escolha seu <span class="title-accent">Horário</span>
+    </h1>
+    <p class="page-subtitle mt-2">Clique em qualquer horário disponível e reserve pelo WhatsApp</p>
+</div>
 
-            <div class="d-none d-lg-block" style="flex: 1;"></div>
-
-            <a class="mx-auto d-none d-lg-flex" href="/">
-                <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
-            </a>
-
-            <div class="d-flex justify-content-end" style="flex: 1;">
-                <a href="/" class="btn-arena">← Início</a>
+<!-- SELETOR DE DATA -->
+<div class="date-picker-section">
+    <div class="container">
+        <div class="date-picker-wrapper">
+            <div class="date-card">
+                <label for="data">📅 Data do jogo</label>
+                <form method="GET" action="">
+                    <div class="date-input-row">
+                        <input type="date" id="data" name="data" value="{{ data_input_html }}"
+                               class="date-input" onchange="this.form.submit()"
+                               aria-label="Selecione a data do jogo">
+                        <button type="submit" class="btn-date-submit">Ver horários</button>
+                    </div>
+                </form>
+                <div class="text-center">
+                    <span class="selected-date-pill">📌 {{ data_selecionada }}</span>
+                </div>
             </div>
         </div>
-    </nav>
-
-    <!-- ============================================================
-         CABEÇALHO
-    ============================================================ -->
-    <div class="page-header anim-in">
-        <p class="page-label">Reserve sua quadra</p>
-        <h1 class="page-title">Escolha seu <span>Horário</span></h1>
-        <p class="page-subtitle">Clique em qualquer horário verde e reserve pelo WhatsApp</p>
     </div>
+</div>
 
-    <!-- ============================================================
-         SELETOR DE DATA
-    ============================================================ -->
-    <div class="date-picker-section">
-        <div class="container">
-            <div class="date-picker-wrapper">
-                <div class="date-card">
-                    <label for="data">📅 Data do jogo</label>
-                    <form method="GET" action="">
-                        <div class="date-input-row">
-                            <input
-                                type="date"
-                                id="data"
-                                name="data"
-                                value="{{ data_input_html }}"
-                                class="date-input"
-                                onchange="this.form.submit()"
-                                aria-label="Selecione a data do jogo"
-                            >
-                            <button type="submit" class="btn-date-submit">Ver horários</button>
+<!-- LEGENDA -->
+<div class="legend-bar">
+    <div class="legend-item"><span class="legend-dot livre"></span> Disponível</div>
+    <div class="legend-item"><span class="legend-dot ocupado"></span> Ocupado</div>
+    <div class="legend-item"><span class="legend-dot passado"></span> Horário passado</div>
+</div>
+
+<!-- GRADE DE QUADRAS -->
+<div class="quadras-grid">
+    <div class="container">
+        {% if dados_das_quadras %}
+        <div class="row g-4">
+            {% for item in dados_das_quadras %}
+            <div class="col-12 col-lg-6">
+                <div class="quadra-card">
+                    <div class="quadra-card-header">
+                        <h2 class="arena-title title-sm title-texture-light" style="color:var(--cinza-texto);margin:0;">
+                            {{ item.quadra.nome }}
+                        </h2>
+                        <span class="avail-badge">🟢 Disponível</span>
+                    </div>
+                    <div class="quadra-card-body">
+
+                        <!-- MANHÃ -->
+                        <div class="turno-section">
+                            <p class="turno-label">☀️ Manhã</p>
+                            <div class="slots-wrapper">
+                                {% for horario in item.horarios %}
+                                    {% if horario.hora_formatada < "12:00" %}
+                                        {% if horario.disponivel %}
+                                            <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
+                                               class="slot slot-livre" target="_blank"
+                                               title="Reservar {{ horario.hora_formatada }}"
+                                               aria-label="Reservar {{ horario.hora_formatada }}">
+                                                {{ horario.hora_formatada }}
+                                            </a>
+                                        {% elif horario.status == 'Esgotado' %}
+                                            <span class="slot slot-esgotado" title="Horário passado">
+                                                <span>{{ horario.hora_formatada }}</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="slot slot-ocupado" title="Ocupado">{{ horario.hora_formatada }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </form>
-                    <div class="text-center">
-                        <span class="selected-date-pill">
-                            📌 {{ data_selecionada }}
-                        </span>
+
+                        <!-- TARDE -->
+                        <div class="turno-section">
+                            <p class="turno-label">🌤️ Tarde</p>
+                            <div class="slots-wrapper">
+                                {% for horario in item.horarios %}
+                                    {% if horario.hora_formatada >= "12:00" and horario.hora_formatada < "18:00" %}
+                                        {% if horario.disponivel %}
+                                            <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
+                                               class="slot slot-livre" target="_blank"
+                                               title="Reservar {{ horario.hora_formatada }}"
+                                               aria-label="Reservar {{ horario.hora_formatada }}">
+                                                {{ horario.hora_formatada }}
+                                            </a>
+                                        {% elif horario.status == 'Esgotado' %}
+                                            <span class="slot slot-esgotado" title="Horário passado">
+                                                <span>{{ horario.hora_formatada }}</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="slot slot-ocupado" title="Ocupado">{{ horario.hora_formatada }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- NOITE -->
+                        <div class="turno-section">
+                            <p class="turno-label">🌙 Noite</p>
+                            <div class="slots-wrapper">
+                                {% for horario in item.horarios %}
+                                    {% if horario.hora_formatada >= "18:00" %}
+                                        {% if horario.disponivel %}
+                                            <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
+                                               class="slot slot-livre" target="_blank"
+                                               title="Reservar {{ horario.hora_formatada }}"
+                                               aria-label="Reservar {{ horario.hora_formatada }}">
+                                                {{ horario.hora_formatada }}
+                                            </a>
+                                        {% elif horario.status == 'Esgotado' %}
+                                            <span class="slot slot-esgotado" title="Horário passado">
+                                                <span>{{ horario.hora_formatada }}</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="slot slot-ocupado" title="Ocupado">{{ horario.hora_formatada }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🏖️</div>
+            <p class="empty-text">Nenhuma quadra disponível para esta data.<br>Tente selecionar outro dia.</p>
+        </div>
+        {% endif %}
     </div>
+</div>
 
-    <!-- ============================================================
-         LEGENDA
-    ============================================================ -->
-    <div class="legend-bar">
-        <div class="legend-item">
-            <span class="legend-dot livre"></span>
-            Disponível
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot ocupado"></span>
-            Ocupado
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot passado"></span>
-            Horário passado
-        </div>
-    </div>
+<footer class="page-footer">
+    Arena Ibituruna Beach — Montes Claros / MG &nbsp;·&nbsp; (38) 9999-9999
+</footer>
 
-    <!-- ============================================================
-         GRADE DE QUADRAS
-    ============================================================ -->
-    <div class="quadras-grid">
-        <div class="container">
-
-            {% if dados_das_quadras %}
-            <div class="row g-4">
-                {% for item in dados_das_quadras %}
-                <div class="col-12 col-lg-6">
-                    <div class="quadra-card">
-
-                        <!-- Header do card -->
-                        <div class="quadra-card-header">
-                            <h2 class="quadra-card-title">{{ item.quadra.nome }}</h2>
-                            {% with livres_count=item.horarios|length %}
-                                {# Sempre mostra badge - o texto exato não depende do count no template, só indica status #}
-                                <span class="availability-badge has-slots">🟢 Horários disponíveis</span>
-                            {% endwith %}
-                        </div>
-
-                        <!-- Corpo: turnos + slots -->
-                        <div class="quadra-card-body">
-
-                            <!-- MANHÃ (08h–11h) -->
-                            <div class="turno-section">
-                                <p class="turno-label">☀️ Manhã</p>
-                                <div class="slots-wrapper">
-                                    {% for horario in item.horarios %}
-                                        {% if horario.hora_formatada < "12:00" %}
-                                            {% if horario.disponivel %}
-                                                <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
-                                                   class="slot slot-livre"
-                                                   target="_blank"
-                                                   title="Reservar {{ horario.hora_formatada }} via WhatsApp"
-                                                   aria-label="Reservar {{ horario.hora_formatada }}">
-                                                    {{ horario.hora_formatada }}
-                                                </a>
-                                            {% elif horario.status == 'Esgotado' %}
-                                                <span class="slot slot-esgotado" title="Horário passado">
-                                                    <span>{{ horario.hora_formatada }}</span>
-                                                </span>
-                                            {% else %}
-                                                <span class="slot slot-ocupado" title="Horário ocupado">
-                                                    {{ horario.hora_formatada }}
-                                                </span>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <!-- TARDE (12h–17h) -->
-                            <div class="turno-section">
-                                <p class="turno-label">🌤️ Tarde</p>
-                                <div class="slots-wrapper">
-                                    {% for horario in item.horarios %}
-                                        {% if horario.hora_formatada >= "12:00" and horario.hora_formatada < "18:00" %}
-                                            {% if horario.disponivel %}
-                                                <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
-                                                   class="slot slot-livre"
-                                                   target="_blank"
-                                                   title="Reservar {{ horario.hora_formatada }} via WhatsApp"
-                                                   aria-label="Reservar {{ horario.hora_formatada }}">
-                                                    {{ horario.hora_formatada }}
-                                                </a>
-                                            {% elif horario.status == 'Esgotado' %}
-                                                <span class="slot slot-esgotado" title="Horário passado">
-                                                    <span>{{ horario.hora_formatada }}</span>
-                                                </span>
-                                            {% else %}
-                                                <span class="slot slot-ocupado" title="Horário ocupado">
-                                                    {{ horario.hora_formatada }}
-                                                </span>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <!-- NOITE (18h–22h) -->
-                            <div class="turno-section">
-                                <p class="turno-label">🌙 Noite</p>
-                                <div class="slots-wrapper">
-                                    {% for horario in item.horarios %}
-                                        {% if horario.hora_formatada >= "18:00" %}
-                                            {% if horario.disponivel %}
-                                                <a href="https://wa.me/{{ whatsapp_dono }}?text={{ horario.texto_whatsapp }}"
-                                                   class="slot slot-livre"
-                                                   target="_blank"
-                                                   title="Reservar {{ horario.hora_formatada }} via WhatsApp"
-                                                   aria-label="Reservar {{ horario.hora_formatada }}">
-                                                    {{ horario.hora_formatada }}
-                                                </a>
-                                            {% elif horario.status == 'Esgotado' %}
-                                                <span class="slot slot-esgotado" title="Horário passado">
-                                                    <span>{{ horario.hora_formatada }}</span>
-                                                </span>
-                                            {% else %}
-                                                <span class="slot slot-ocupado" title="Horário ocupado">
-                                                    {{ horario.hora_formatada }}
-                                                </span>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                        </div>{# /quadra-card-body #}
-                    </div>{# /quadra-card #}
-                </div>
-                {% endfor %}
-            </div>
-
-            {% else %}
-            <!-- Estado vazio -->
-            <div class="empty-state">
-                <div class="empty-icon">🏖️</div>
-                <p class="empty-text">Nenhuma quadra disponível para esta data.<br>Tente selecionar outro dia.</p>
-            </div>
-            {% endif %}
-
-        </div>
-    </div>
-
-    <!-- ============================================================
-         RODAPÉ MÍNIMO
-    ============================================================ -->
-    <footer class="page-footer">
-        Arena Ibituruna Beach — Montes Claros / MG &nbsp;·&nbsp; (38) 9999-9999
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Feedback visual instantâneo ao clicar num slot livre
-        document.querySelectorAll('.slot-livre').forEach(function(slot) {
-            slot.addEventListener('click', function() {
-                this.style.background = '#5A32A3';
-                this.style.transform = 'scale(0.96)';
-            });
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.slot-livre').forEach(function(s){
+        s.addEventListener('click',function(){
+            this.style.background='#5A32A3';
+            this.style.transform='scale(.96)';
         });
-
-        // Auto-submit do date picker ao mudar (já feito com onchange, mas garante)
-        document.getElementById('data').addEventListener('change', function() {
-            this.closest('form').submit();
-        });
-    </script>
+    });
+</script>
 </body>
 </html>

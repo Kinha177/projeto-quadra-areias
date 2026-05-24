@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financeiro — Arena Ibituruna Beach</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ================================================================
+           DESIGN SYSTEM — PAINEL FINANCEIRO
+           Conceito: "Command Center" — cockpit do dono, não planilha genérica
+           O dono vê o status do mês em < 2 segundos ao abrir a página
+        ================================================================ */
+
+        :root {
+            /* Paleta da marca */
+            --roxo:           #6F42C1;
+            --roxo-hover:     #5A32A3;
+            --roxo-deep:      #3D1F8A;
+            --roxo-glass:     rgba(111, 66, 193, 0.10);
+            --roxo-glow:      rgba(111, 66, 193, 0.22);
+            --ciano-bg:       #E6F7FF;
+            --ciano-mid:      #d0eeff;
+
+            /* Status financeiro */
+            --verde:          #059669;
+            --verde-bg:       rgba(5, 150, 105, 0.08);
+            --verde-border:   rgba(5, 150, 105, 0.20);
+            --verde-glow:     rgba(5, 150, 105, 0.18);
+
+            --laranja:        #D97706;
+            --laranja-bg:     rgba(217, 119, 6, 0.08);
+            --laranja-border: rgba(217, 119, 6, 0.22);
+            --laranja-glow:   rgba(217, 119, 6, 0.15);
+
+            --vermelho:       #DC2626;
+            --vermelho-bg:    rgba(220, 38, 38, 0.07);
+            --vermelho-border:rgba(220, 38, 38, 0.20);
+            --vermelho-glow:  rgba(220, 38, 38, 0.15);
+
+            /* Neutros */
+            --cinza-texto:    #111827;
+            --cinza-medio:    #374151;
+            --cinza-suave:    #6B7280;
+            --cinza-linha:    rgba(0,0,0,0.05);
+            --branco:         #ffffff;
+
+            /* Elevação */
+            --shadow-sm:    0 2px 8px rgba(111,66,193,0.07), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md:    0 6px 24px rgba(111,66,193,0.12), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-lg:    0 16px 48px rgba(111,66,193,0.18), 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-kpi:   0 8px 32px rgba(111,66,193,0.14), 0 2px 8px rgba(0,0,0,0.06);
+
+            --radius-sm:    10px;
+            --radius-md:    18px;
+            --radius-lg:    24px;
+            --radius-pill:  50px;
+        }
+
+        /* ═══ SISTEMA TIPOGRÁFICO — Anton + CSS Grunge ══════════ */
+        .arena-title {
+            font-family: 'Anton', sans-serif; /* arena-title aplicado */
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            line-height: 1.05;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+        .arena-title.title-texture::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+            mix-blend-mode: multiply;
+            opacity: 0.38;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .arena-title.title-texture-light::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+            background-size: 140px 140px;
+            mix-blend-mode: multiply;
+            opacity: 0.22;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .title-xl { font-size: clamp(2.4rem, 6vw, 4.2rem);  }
+        .title-lg { font-size: clamp(1.8rem, 4vw, 2.8rem);   }
+        .title-md { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
+        .title-sm { font-size: clamp(1rem, 2vw, 1.25rem);    }
+        .title-accent { color: var(--roxo); }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background: var(--ciano-bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--cinza-texto);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ---- Malha decorativa de fundo ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(111,66,193,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(111,66,193,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ---- Orbe de atmosfera ---- */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -180px; right: -180px;
+            width: 560px; height: 560px;
+            background: radial-gradient(circle, rgba(111,66,193,0.09) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ================================================================
+           NAVBAR
+        ================================================================ */
+        .navbar-fin {
+            position: relative;
+            z-index: 100;
+            padding: 18px 0;
+            background: rgba(230,247,255,0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(111,66,193,0.09);
+        }
+        .navbar-logo {
+            height: 56px;
+            object-fit: contain;
+        }
+        @media (min-width: 992px) { .navbar-logo { height: 96px; } }
+
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--roxo);
+            color: var(--branco);
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.865rem;
+            padding: 9px 22px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px var(--roxo-glow);
+            transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .btn-nav:hover {
+            background: var(--roxo-hover);
+            color: var(--branco);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(111,66,193,0.40);
+        }
+
+        /* ================================================================
+           PÁGINA — HEADER
+        ================================================================ */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            padding: 52px 0 44px;
+        }
+        .page-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--roxo);
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+        .page-title {
+            font-family: 'Anton', sans-serif; /* arena-title aplicado */
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            font-weight: 800;
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            letter-spacing: -0.025em;
+            color: var(--cinza-texto);
+            line-height: 1.08;
+            margin-bottom: 6px;
+        }
+        .page-title span { color: var(--roxo); }
+        .page-meta {
+            font-size: 0.9rem;
+            color: var(--cinza-suave);
+            font-weight: 400;
+            margin: 0;
+        }
+        /* Badge do mês ao lado do título */
+        .month-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, var(--roxo) 0%, #8B5CF6 100%);
+            color: var(--branco);
+            border-radius: var(--radius-pill);
+            padding: 6px 18px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 0 4px 16px var(--roxo-glow);
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+
+        /* ================================================================
+           KPI CARDS — alto impacto visual
+        ================================================================ */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 44px;
+        }
+        @media (max-width: 767px) {
+            .kpi-grid { grid-template-columns: 1fr; gap: 14px; }
+        }
+        @media (min-width: 768px) and (max-width: 991px) {
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .kpi-card {
+            position: relative;
+            border-radius: var(--radius-lg);
+            padding: 28px 28px 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-kpi);
+            border: 1px solid transparent;
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Fundo glassmorphism por variante */
+        .kpi-ok {
+            background: linear-gradient(145deg,
+                rgba(255,255,255,0.96) 0%,
+                rgba(236,253,245,0.90) 100%);
+            border-color: var(--verde-border);
+            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--verde-border);
+        }
+        .kpi-ok:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--verde-border); }
+
+        .kpi-avencer {
+            background: linear-gradient(145deg,
+                rgba(255,255,255,0.96) 0%,
+                rgba(255,251,235,0.90) 100%);
+            border-color: var(--laranja-border);
+            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--laranja-border);
+        }
+        .kpi-avencer:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--laranja-border); }
+
+        .kpi-atrasado {
+            background: linear-gradient(145deg,
+                rgba(255,255,255,0.96) 0%,
+                rgba(254,242,242,0.90) 100%);
+            border-color: var(--vermelho-border);
+            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--vermelho-border);
+        }
+        .kpi-atrasado:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--vermelho-border); }
+
+        /* Ícone do KPI */
+        .kpi-icon-wrap {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        .kpi-ok    .kpi-icon-wrap { background: var(--verde-bg);    }
+        .kpi-avencer .kpi-icon-wrap { background: var(--laranja-bg); }
+        .kpi-atrasado .kpi-icon-wrap { background: var(--vermelho-bg); }
+
+        /* Número principal */
+        .kpi-number {
+            font-family: 'Anton', sans-serif; /* arena-title aplicado */
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            font-weight: 800;
+            font-size: 2.8rem;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+        }
+        .kpi-ok .kpi-number       { color: var(--verde); }
+        .kpi-avencer .kpi-number  { color: var(--laranja); }
+        .kpi-atrasado .kpi-number { color: var(--vermelho); }
+
+        .kpi-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--cinza-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 14px;
+        }
+
+        /* Valor financeiro dentro do KPI */
+        .kpi-valor {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: var(--radius-sm);
+            padding: 5px 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+        .kpi-ok    .kpi-valor { background: var(--verde-bg);    color: var(--verde);    border: 1px solid var(--verde-border);   }
+        .kpi-avencer .kpi-valor { background: var(--laranja-bg); color: var(--laranja);  border: 1px solid var(--laranja-border); }
+        .kpi-atrasado .kpi-valor { background: var(--vermelho-bg); color: var(--vermelho); border: 1px solid var(--vermelho-border); }
+
+        /* Elemento decorativo geométrico no canto do card */
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            bottom: -28px; right: -28px;
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            opacity: 0.07;
+        }
+        .kpi-ok::after       { background: var(--verde); }
+        .kpi-avencer::after  { background: var(--laranja); }
+        .kpi-atrasado::after { background: var(--vermelho); }
+
+        /* ================================================================
+           BARRA DE PROGRESSO VISUAL (receita confirmada vs pendente)
+        ================================================================ */
+        .receita-bar-wrap {
+            background: var(--branco);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(111,66,193,0.08);
+            margin-bottom: 32px;
+        }
+        .receita-bar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .receita-bar-header h6 {
+            font-family: 'Anton', sans-serif; /* arena-title aplicado */
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--cinza-texto);
+            margin: 0;
+        }
+        .receita-bar-totais {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .receita-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--cinza-medio);
+        }
+        .receita-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+        /* Barra de progresso customizada */
+        .progress-custom {
+            height: 10px;
+            border-radius: 50px;
+            background: rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .progress-fill-verde {
+            height: 100%;
+            background: linear-gradient(90deg, var(--verde) 0%, #34d399 100%);
+            border-radius: 50px;
+            transition: width 1s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        /* ================================================================
+           TABELA FINANCEIRA
+        ================================================================ */
+        .table-card {
+            background: var(--branco);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(111,66,193,0.07);
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            padding: 24px 32px 20px;
+            border-bottom: 1.5px solid rgba(111,66,193,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .table-card-header h5 {
+            font-family: 'Anton', sans-serif; /* arena-title aplicado */
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--cinza-texto);
+            margin: 0;
+        }
+
+        /* Search / filtro leve */
+        .table-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--ciano-bg);
+            border: 1.5px solid rgba(111,66,193,0.14);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            color: var(--cinza-suave);
+        }
+        .table-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            color: var(--cinza-texto);
+            width: 160px;
+        }
+        .table-search input::placeholder { color: var(--cinza-suave); }
+
+        /* Tabela */
+        .fin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .fin-table thead tr {
+            background: rgba(111,66,193,0.03);
+        }
+        .fin-table thead th {
+            padding: 14px 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--cinza-suave);
+            border-bottom: 1.5px solid rgba(111,66,193,0.07);
+            white-space: nowrap;
+        }
+
+        .fin-table tbody tr {
+            border-bottom: 1px solid var(--cinza-linha);
+            transition: background 0.15s ease;
+        }
+        .fin-table tbody tr:last-child { border-bottom: none; }
+        .fin-table tbody tr:hover { background: rgba(111,66,193,0.025); }
+
+        .fin-table tbody td {
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        /* Avatar do aluno */
+        .aluno-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .aluno-avatar {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--roxo) 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+            letter-spacing: 0.02em;
+        }
+        .aluno-nome {
+            font-weight: 600;
+            color: var(--cinza-texto);
+            font-size: 0.9rem;
+        }
+
+        /* Valor */
+        .valor-cell {
+            font-weight: 700;
+            color: var(--cinza-medio);
+            font-size: 0.9rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ---- BADGES de status — o coração do redesign ---- */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: var(--radius-pill);
+            padding: 5px 13px 5px 10px;
+            font-size: 0.77rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            position: relative;
+        }
+        .badge-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* OK — verde esmeralda */
+        .badge-ok {
+            background: var(--verde-bg);
+            color: var(--verde);
+            border: 1px solid var(--verde-border);
+        }
+        .badge-ok .badge-dot {
+            background: var(--verde);
+            box-shadow: 0 0 0 2px rgba(5,150,105,0.25);
+            animation: pulse-ok 2.5s ease-in-out infinite;
+        }
+
+        /* A Vencer — laranja âmbar */
+        .badge-avencer {
+            background: var(--laranja-bg);
+            color: var(--laranja);
+            border: 1px solid var(--laranja-border);
+        }
+        .badge-avencer .badge-dot {
+            background: var(--laranja);
+        }
+
+        /* Atrasado — vermelho rubi */
+        .badge-atrasado {
+            background: var(--vermelho-bg);
+            color: var(--vermelho);
+            border: 1px solid var(--vermelho-border);
+        }
+        .badge-atrasado .badge-dot {
+            background: var(--vermelho);
+            animation: pulse-red 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ok {
+            0%, 100% { box-shadow: 0 0 0 2px rgba(5,150,105,0.25); }
+            50% { box-shadow: 0 0 0 4px rgba(5,150,105,0.10); }
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 2px rgba(220,38,38,0.20); }
+            50% { box-shadow: 0 0 0 4px rgba(220,38,38,0.08); }
+        }
+
+        /* Célula vazia */
+        .empty-row td {
+            padding: 52px 24px;
+            text-align: center;
+        }
+        .empty-icon { font-size: 2.5rem; opacity: 0.35; margin-bottom: 10px; }
+        .empty-text { font-size: 0.9rem; color: var(--cinza-suave); }
+
+        /* Rodapé da tabela */
+        .table-footer {
+            padding: 16px 24px;
+            border-top: 1.5px solid rgba(111,66,193,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .table-footer-count {
+            font-size: 0.78rem;
+            color: var(--cinza-suave);
+            font-weight: 500;
+        }
+        .btn-admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--roxo);
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+        .btn-admin-link:hover { color: var(--roxo-hover); }
+
+        /* ================================================================
+           ANIMAÇÕES DE ENTRADA
+        ================================================================ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .anim-1 { animation: fadeUp 0.55s 0.00s ease both; }
+        .anim-2 { animation: fadeUp 0.55s 0.10s ease both; }
+        .anim-3 { animation: fadeUp 0.55s 0.20s ease both; }
+        .anim-4 { animation: fadeUp 0.55s 0.30s ease both; }
+        .anim-5 { animation: fadeUp 0.55s 0.40s ease both; }
+
+        /* ================================================================
+           RESPONSIVIDADE DA TABELA
+        ================================================================ */
+        .table-responsive-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        @media (max-width: 640px) {
+            .table-card-header { padding: 18px 20px 14px; }
+            .table-search { display: none; }
+            .fin-table thead th,
+            .fin-table tbody td { padding: 14px 16px; }
+            .aluno-avatar { display: none; }
+        }
+
+        /* ================================================================
+           FOOTER DA PÁGINA
+        ================================================================ */
+        .page-footer-strip {
+            position: relative;
+            z-index: 1;
+            padding: 24px 0 36px;
+            text-align: center;
+            font-size: 0.76rem;
+            color: var(--cinza-suave);
+            border-top: 1px solid rgba(111,66,193,0.07);
+        }
+    </style>
+</head>
+<body>
+<!-- ================================================================
+     NAVBAR
+================================================================ -->
+<nav class="navbar-fin">
+    <div class="container d-flex align-items-center">
+
+        <a class="me-auto d-lg-none" href="/">
+            <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
+        </a>
+
+        <div class="d-none d-lg-block" style="flex:1;"></div>
+
+        <a class="mx-auto d-none d-lg-flex" href="/">
+            <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
+        </a>
+
+        <div class="d-flex gap-2 justify-content-end" style="flex:1;">
+            <a href="/agendamento/" class="btn-nav">📅 Ver Reservas</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ================================================================
+     CONTEÚDO PRINCIPAL
+================================================================ -->
+<div class="page-wrapper">
+<div class="container">
+
+    <!-- Header da página -->
+    <div class="page-header anim-1">
+        <p class="page-eyebrow">Gestão financeira</p>
+        <h1 class="page-title arena-title title-lg title-texture">
+            Fluxo de Caixa
+            <span class="month-badge">📅 {{ mes_texto }}</span>
+        </h1>
+        <p class="page-meta">Visão consolidada dos mensalistas ativos neste mês</p>
+    </div>
+
+    <!-- ============================================================
+         KPI CARDS
+    ============================================================ -->
+    <div class="kpi-grid anim-2">
+
+        <!-- OK -->
+        <div class="kpi-card kpi-ok">
+            <div class="kpi-icon-wrap">✅</div>
+            <div class="kpi-number">{{ total_ok }}</div>
+            <div class="kpi-label">Pagamentos OK</div>
+            <div class="kpi-valor">
+                💰 R$ {{ receita_confirmada }}
+            </div>
+        </div>
+
+        <!-- A Vencer -->
+        <div class="kpi-card kpi-avencer">
+            <div class="kpi-icon-wrap">🕐</div>
+            <div class="kpi-number">{{ total_avencer }}</div>
+            <div class="kpi-label">A Vencer</div>
+            <div class="kpi-valor">
+                📆 No prazo
+            </div>
+        </div>
+
+        <!-- Atrasados -->
+        <div class="kpi-card kpi-atrasado">
+            <div class="kpi-icon-wrap">⚠️</div>
+            <div class="kpi-number">{{ total_atrasado }}</div>
+            <div class="kpi-label">Atrasados</div>
+            <div class="kpi-valor">
+                🔴 R$ {{ receita_pendente }} em aberto
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+         BARRA DE PROGRESSO DA RECEITA
+    ============================================================ -->
+    <div class="receita-bar-wrap anim-3">
+        <div class="receita-bar-header">
+            <h6>Progresso da Receita Mensal</h6>
+            <div class="receita-bar-totais">
+                <div class="receita-item">
+                    <span class="receita-dot" style="background: var(--verde);"></span>
+                    Confirmada: <strong>R$ {{ receita_confirmada }}</strong>
+                </div>
+                <div class="receita-item">
+                    <span class="receita-dot" style="background: rgba(0,0,0,0.15);"></span>
+                    Pendente: <strong>R$ {{ receita_pendente }}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="progress-custom">
+            <div class="progress-fill-verde" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         TABELA DE FLUXO DE CAIXA
+    ============================================================ -->
+    <div class="table-card anim-4" style="margin-bottom: 48px;">
+
+        <!-- Header da tabela -->
+        <div class="table-card-header">
+            <h5>👥 Mensalistas — {{ mes_texto }}</h5>
+            <div class="table-search">
+                🔍
+                <input type="text" id="searchInput" placeholder="Buscar aluno..." onkeyup="filterTable()">
+            </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="table-responsive-wrapper">
+            <table class="fin-table" id="finTable">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Mensalidade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lista_financeira %}
+                    <tr>
+                        <!-- Nome com avatar gerado pela inicial -->
+                        <td>
+                            <div class="aluno-cell">
+                                <div class="aluno-avatar">
+                                    {{ item.nome|slice:":2"|upper }}
+                                </div>
+                                <span class="aluno-nome">{{ item.nome }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Valor -->
+                        <td class="valor-cell">R$ {{ item.valor }}</td>
+
+                        <!-- Badge de status -->
+                        <td>
+                            {% if item.classe_css == 'ok' %}
+                                <span class="status-badge badge-ok">
+                                    <span class="badge-dot"></span>
+                                    Pagamento OK
+                                </span>
+                            {% elif item.classe_css == 'atrasado' %}
+                                <span class="status-badge badge-atrasado">
+                                    <span class="badge-dot"></span>
+                                    {{ item.status }}
+                                </span>
+                            {% else %}
+                                <span class="status-badge badge-avencer">
+                                    <span class="badge-dot"></span>
+                                    {{ item.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="3">
+                            <div class="empty-icon">🏖️</div>
+                            <p class="empty-text">Nenhum aluno mensalista cadastrado ainda.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé da tabela -->
+        <div class="table-footer">
+            <span class="table-footer-count">
+                {% with total=lista_financeira|length %}
+                    {{ total }} aluno{{ total|pluralize:"s" }} no mês
+                {% endwith %}
+            </span>
+            <a href="/admin/alunos/pagamento/" class="btn-admin-link">
+                Gerenciar no Admin →
+            </a>
+        </div>
+
+    </div>
+
+</div><!-- /container -->
+</div><!-- /page-wrapper -->
+
+<!-- Footer -->
+<div class="page-footer-strip">
+    Arena Ibituruna Beach — Sistema de Gestão
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ----------------------------------------------------------------
+    // Animação da barra de progresso ao carregar
+    // ----------------------------------------------------------------
+    (function() {
+        var bar = document.getElementById('progressBar');
+        if (!bar) return;
+
+        // Os valores vêm do Django como strings; precisamos calcular o %
+        // Usamos data-attributes para passar os valores do template
+        var confirmada = parseFloat("{{ receita_confirmada|default:'0' }}") || 0;
+        var pendente   = parseFloat("{{ receita_pendente|default:'0' }}")   || 0;
+        var total = confirmada + pendente;
+
+        var pct = total > 0 ? Math.round((confirmada / total) * 100) : 0;
+
+        // Anima após o DOM carregar
+        setTimeout(function() {
+            bar.style.width = pct + '%';
+        }, 300);
+    })();
+
+    // ----------------------------------------------------------------
+    // Filtro de busca na tabela (client-side, sem requisição)
+    // ----------------------------------------------------------------
+    function filterTable() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var rows  = document.querySelectorAll('#finTable tbody tr:not(.empty-row)');
+
+        rows.forEach(function(row) {
+            var nome = row.querySelector('.aluno-nome');
+            if (!nome) return;
+            row.style.display = nome.textContent.toLowerCase().includes(input) ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

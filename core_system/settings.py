@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_URL  = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Carrega as variáveis de segurança do arquivo .env
 load_dotenv(BASE_DIR / '.env')
 
@@ -31,6 +34,7 @@ INSTALLED_APPS = [
     'reservas',
     'quadras',
     'alunos',
+    'pdv'
 ]
 
 MIDDLEWARE = [
@@ -116,57 +120,76 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # CONFIGURAÇÕES DO PAINEL ADMIN (JAZZMIN)
 # ==========================================
 JAZZMIN_SETTINGS = {
-    # ---- Identidade ----
     "site_title":   "Arena Admin",
     "site_header":  "Arena Ibituruna Beach",
     "site_brand":   "Arena Ibituruna",
     "site_logo":    "reservas/img/logo_oficial.png",
-    "site_logo_classes": "img-fluid",
-    "site_icon":    "reservas/img/logo_oficial.png",  # favicon
     "welcome_sign": "Bem-vindo ao sistema de gestão 🏐",
+    "show_sidebar": True,
  
-    # ---- Links rápidos no topo (rotina diária do dono) ----
+    # Links rápidos no topo — agora com o PDV
     "topmenu_links": [
-        {"name": "🌐 Ver o Site",          "url": "/",            "new_window": True},
-        {"name": "📊 Painel Financeiro",   "url": "/financeiro/"},
-        {"name": "📅 Grade de Horários",   "url": "/agendamento/","new_window": True},
+        {"name": "🌐 Ver o Site",        "url": "/",             "new_window": True},
+        {"name": "🍺 PDV / Bar",          "url": "/pdv/",         "new_window": True},
+        {"name": "📊 Financeiro",         "url": "/financeiro/"},
+        {"name": "📅 Agendamento",        "url": "/agendamento/", "new_window": True},
     ],
  
-    # ---- Ícones por model (FontAwesome 5, já incluso no Jazzmin) ----
+    # Ícones — FontAwesome 5 (já incluso no Jazzmin)
     "icons": {
-        "auth":             "fas fa-users-cog",
-        "auth.user":        "fas fa-user-shield",
-        "auth.group":       "fas fa-users",
-        "alunos.Aluno":     "fas fa-user-graduate",
-        "alunos.Pagamento": "fas fa-dollar-sign",
-        "quadras.Quadra":   "fas fa-volleyball-ball",
-        "reservas.Reserva": "fas fa-calendar-check",
+        # Apps já existentes
+        "auth":                "fas fa-users-cog",
+        "auth.user":           "fas fa-user-shield",
+        "auth.group":          "fas fa-users",
+        "alunos.Aluno":        "fas fa-user-graduate",
+        "alunos.Pagamento":    "fas fa-dollar-sign",
+        "quadras.Quadra":      "fas fa-volleyball-ball",
+        "reservas.Reserva":    "fas fa-calendar-check",
+        # ── PDV / Bar (novos) ──
+        "pdv":                 "fas fa-cash-register",
+        "pdv.Categoria":       "fas fa-tags",
+        "pdv.Produto":         "fas fa-burger",
+        "pdv.Comanda":         "fas fa-receipt",
+        "pdv.ItemComanda":     "fas fa-list-ul",
     },
     "default_icon_parents":  "fas fa-chevron-right",
     "default_icon_children": "fas fa-circle",
  
-    # ---- Ordem do menu lateral (do mais usado ao menos usado) ----
+    # Ordem do menu lateral (mais usado no topo)
     "order_with_respect_to": [
-        "alunos.Pagamento",   # 1. Registra pagamentos todo dia
-        "reservas.Reserva",   # 2. Confere quem reservou
-        "alunos.Aluno",       # 3. Cadastra/edita mensalistas
-        "quadras.Quadra",     # 4. Raramente muda
-        "auth",               # 5. Só quando cria novo usuário
+        "pdv.Comanda",          # 1. Ver histórico de comandas
+        "pdv.Produto",          # 2. Ajustar estoque e preços
+        "pdv.Categoria",        # 3. Raramente muda
+        "alunos.Pagamento",     # 4. Mensalidades
+        "reservas.Reserva",     # 5. Agendamentos
+        "alunos.Aluno",
+        "quadras.Quadra",
+        "auth",
     ],
  
-    # ---- Comportamento do painel ----
-    "show_sidebar":              True,
-    "navigation_expanded":       True,
-    "related_modal_active":      True,   # edita FK em modal — sem sair da página
-    "show_ui_builder":           False,  # remove o builder em produção
-    "changeform_format":         "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user":  "collapsible",
-        "auth.group": "vertical_tabs",
-    },
+    "show_ui_builder":       False,
+    "related_modal_active":  True,
+    "navigation_expanded":   True,
+    "actions_sticky_top":    True,
+}
  
-    # CSS personalizado (arquivo que vamos criar no próximo passo)
-    "custom_css": "reservas/css/jazzmin_custom.css",
+JAZZMIN_UI_TWEAKS = {
+    "navbar":                    "navbar-dark",
+    "theme":                     "darkly",
+    "sidebar":                   "sidebar-dark-primary",
+    "sidebar_nav_child_indent":  True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style":  False,
+    "sidebar_nav_flat_style":    False,
+    "actions_sticky_top":        True,
+    "button_classes": {
+        "primary":   "btn-primary",
+        "secondary": "btn-secondary",
+        "info":      "btn-info",
+        "warning":   "btn-warning",
+        "danger":    "btn-danger",
+        "success":   "btn-success",
+    },
 }
  
  
