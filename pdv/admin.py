@@ -50,10 +50,10 @@ class ProdutoAdmin(admin.ModelAdmin):
     ordering       = ('categoria', 'nome')
 
     fieldsets = (
-        ('📦 Produto', {
+        ('Produto', {
             'fields': ('categoria', 'nome', 'foto'),
         }),
-        ('💰 Preço e Estoque', {
+        ('Preco e Estoque', {
             'fields': ('preco', 'estoque', 'disponivel'),
             'description': (
                 'Atenção: alterar o preço afeta apenas novas vendas. '
@@ -77,8 +77,8 @@ class ProdutoAdmin(admin.ModelAdmin):
             '<div style="'
             'width:52px; height:52px; border-radius:10px;'
             'background:#f3f4f6; display:flex; align-items:center;'
-            'justify-content:center; font-size:1.4rem;'
-            '">🍽️</div>'
+            'justify-content:center; color:#9ca3af; font-size:1.1rem;'
+            '"><i class="fas fa-utensils"></i></div>'
         )
 
 
@@ -132,9 +132,9 @@ class ComandaAdmin(admin.ModelAdmin):
     @admin.display(description='Status')
     def status_badge(self, obj):
         estilos = {
-            'aberta':    ('#d1fae5', '#065f46', '#6ee7b7', '🟢 Aberta'),
-            'paga':      ('#ede9fe', '#4c1d95', '#c4b5fd', '✅ Paga'),
-            'cancelada': ('#fee2e2', '#991b1b', '#fca5a5', '❌ Cancelada'),
+            'aberta':    ('#d1fae5', '#065f46', '#6ee7b7', 'Aberta'),
+            'paga':      ('#ede9fe', '#4c1d95', '#c4b5fd', 'Paga'),
+            'cancelada': ('#fee2e2', '#991b1b', '#fca5a5', 'Cancelada'),
         }
         bg, txt, border, label = estilos.get(
             obj.status, ('#f3f4f6', '#374151', '#d1d5db', obj.status)
@@ -197,8 +197,8 @@ class ComandaAdmin(admin.ModelAdmin):
 #   ],
 #
 #   "topmenu_links": [
-#       {"name": "🌐 Ver o Site",        "url": "/",            "new_window": True},
-#       {"name": "🍺 PDV / Bar",          "url": "/pdv/",        "new_window": True},
-#       {"name": "📊 Financeiro",         "url": "/financeiro/"},
-#       {"name": "📅 Agendamento",        "url": "/agendamento/","new_window": True},
+#       {"name": "Ver o Site",   "url": "/",            "new_window": True},
+#       {"name": "PDV / Bar",    "url": "/pdv/",        "new_window": True},
+#       {"name": "Financeiro",   "url": "/financeiro/"},
+#       {"name": "Agendamento",  "url": "/agendamento/","new_window": True},
 #   ],

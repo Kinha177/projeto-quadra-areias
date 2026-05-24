@@ -8,14 +8,14 @@ class AlunoAdmin(admin.ModelAdmin):
     search_fields = ('nome', 'whatsapp')
 
     fieldsets = (
-        ('👤 Dados do Aluno', {
+        ('Dados do Aluno', {
             'fields': ('nome', 'whatsapp', 'ativo')
         }),
-        ('📅 Agenda Fixa', {
+        ('Agenda Fixa', {
             'fields': ('quadra', 'dia_da_semana', 'horario'),
-            'description': 'Atenção: alterar o horário aqui bloqueia automaticamente no agendamento.'
+            'description': 'Atencao: alterar o horario aqui bloqueia automaticamente no agendamento.'
         }),
-        ('💰 Financeiro', {
+        ('Financeiro', {
             'fields': ('valor_mensalidade', 'dia_vencimento')
         }),
     )
@@ -31,12 +31,12 @@ class PagamentoAdmin(admin.ModelAdmin):
     list_editable = ('pago',)
     actions = ['marcar_como_pago', 'marcar_como_pendente']
 
-    @admin.action(description='✅ Marcar selecionados como PAGO')
+    @admin.action(description='Marcar selecionados como PAGO')
     def marcar_como_pago(self, request, queryset):
         atualizados = queryset.update(pago=True)
         self.message_user(request, f'{atualizados} pagamento(s) marcado(s) como pago.')
 
-    @admin.action(description='❌ Marcar selecionados como PENDENTE')
+    @admin.action(description='Marcar selecionados como PENDENTE')
     def marcar_como_pendente(self, request, queryset):
         atualizados = queryset.update(pago=False)
         self.message_user(request, f'{atualizados} pagamento(s) revertido(s) para pendente.')

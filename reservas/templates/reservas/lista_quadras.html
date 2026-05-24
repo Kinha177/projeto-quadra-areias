@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
 
     <style>
         :root {
@@ -328,7 +329,7 @@
     <div class="container">
         <div class="date-picker-wrapper">
             <div class="date-card">
-                <label for="data">📅 Data do jogo</label>
+                <label for="data">Data do jogo</label>
                 <form method="GET" action="">
                     <div class="date-input-row">
                         <input type="date" id="data" name="data" value="{{ data_input_html }}"
@@ -338,7 +339,7 @@
                     </div>
                 </form>
                 <div class="text-center">
-                    <span class="selected-date-pill">📌 {{ data_selecionada }}</span>
+                    <span class="selected-date-pill">{{ data_selecionada }}</span>
                 </div>
             </div>
         </div>
@@ -364,13 +365,13 @@
                         <h2 class="arena-title title-sm title-texture-light" style="color:var(--cinza-texto);margin:0;">
                             {{ item.quadra.nome }}
                         </h2>
-                        <span class="avail-badge">🟢 Disponível</span>
+                        <span class="avail-badge">Disponivel</span>
                     </div>
                     <div class="quadra-card-body">
 
                         <!-- MANHÃ -->
                         <div class="turno-section">
-                            <p class="turno-label">☀️ Manhã</p>
+                            <p class="turno-label">Manha</p>
                             <div class="slots-wrapper">
                                 {% for horario in item.horarios %}
                                     {% if horario.hora_formatada < "12:00" %}
@@ -395,7 +396,7 @@
 
                         <!-- TARDE -->
                         <div class="turno-section">
-                            <p class="turno-label">🌤️ Tarde</p>
+                            <p class="turno-label">Tarde</p>
                             <div class="slots-wrapper">
                                 {% for horario in item.horarios %}
                                     {% if horario.hora_formatada >= "12:00" and horario.hora_formatada < "18:00" %}
@@ -420,7 +421,7 @@
 
                         <!-- NOITE -->
                         <div class="turno-section">
-                            <p class="turno-label">🌙 Noite</p>
+                            <p class="turno-label">Noite</p>
                             <div class="slots-wrapper">
                                 {% for horario in item.horarios %}
                                     {% if horario.hora_formatada >= "18:00" %}
@@ -450,7 +451,9 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">🏖️</div>
+            <div class="empty-icon" style="font-size:3rem;opacity:.35;margin-bottom:16px;">
+                <i class="fas fa-calendar-times" style="color:var(--roxo);"></i>
+            </div>
             <p class="empty-text">Nenhuma quadra disponível para esta data.<br>Tente selecionar outro dia.</p>
         </div>
         {% endif %}

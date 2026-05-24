@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
 
     <style>
     /* ================================================================
@@ -670,7 +671,7 @@
 ================================================================ -->
 <header class="topbar">
     <a href="/" class="topbar-brand">
-        <div class="brand-icon">🍺</div>
+        <div class="brand-icon"><i class="fas fa-glass-martini-alt"></i></div>
         PDV · Bar
     </a>
 
@@ -681,7 +682,7 @@
         <span id="kpi-qtd-text">{{ qtd_abertas }} aberta{{ qtd_abertas|pluralize:"s" }}</span>
     </div>
     <div class="topbar-kpi" id="kpi-total">
-        💰 <strong id="kpi-total-text">R$ {{ total_aberto|floatformat:2 }}</strong>
+        <strong id="kpi-total-text">R$ {{ total_aberto|floatformat:2 }}</strong>
     </div>
 
     <button class="btn-nova-comanda" onclick="abrirModal()">
@@ -734,7 +735,7 @@
                         {% if produto.foto %}
                             <img src="{{ produto.foto.url }}" alt="{{ produto.nome }}">
                         {% else %}
-                            🍽️
+                            <i class="fas fa-utensils" style="color:#d1d5db;font-size:1.2rem;"></i>
                         {% endif %}
                     </div>
 
@@ -746,7 +747,7 @@
                             {% if produto.estoque == 0 %}
                                 Sem estoque
                             {% elif produto.estoque <= 3 %}
-                                ⚠️ Último{{ produto.estoque|pluralize }}s: {{ produto.estoque }}
+                                Ultimos: {{ produto.estoque }}
                             {% else %}
                                 {{ produto.estoque }} em estoque
                             {% endif %}
@@ -775,12 +776,12 @@
 ================================================================ -->
 <div class="mobile-tabs" id="mobile-tabs">
     <button class="mobile-tab-btn active" id="tab-btn-comandas" onclick="mobileTab('comandas')">
-        <span class="tab-icon">🧾</span>
+        <span class="tab-icon"><i class="fas fa-receipt"></i></span>
         Comandas
     </button>
     <button class="mobile-tab-btn" id="tab-btn-catalogo" onclick="mobileTab('catalogo')">
-        <span class="tab-icon">🍽️</span>
-        Catálogo
+        <span class="tab-icon"><i class="fas fa-utensils"></i></span>
+        Catalogo
     </button>
 </div>
 
@@ -789,7 +790,7 @@
 ================================================================ -->
 <div class="modal-overlay" id="modal-nova" onclick="fecharModalSeFora(event)">
     <div class="modal-box">
-        <div class="modal-title">🧾 Nova Comanda</div>
+        <div class="modal-title">Nova Comanda</div>
         <p class="modal-sub">Identifique o cliente ou mesa para abrir a comanda.</p>
         <input
             type="text"
@@ -858,7 +859,7 @@ function renderComandas() {
     if (abertas.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">🧾</div>
+                <div class="empty-icon"><i class="fas fa-receipt"></i></div>
                 <p class="empty-text">Nenhuma comanda aberta.<br>Clique em "Nova Comanda" para começar.</p>
             </div>`;
         return;
@@ -898,7 +899,7 @@ function renderCardComanda(c) {
             </button>
             <button class="btn-pagar"
                     onclick="event.stopPropagation(); pagarComanda(${c.id})">
-                ✅ Pagar
+                Pagar
             </button>
             <button class="btn-cancelar"
                     onclick="event.stopPropagation(); cancelarComanda(${c.id})"
@@ -921,7 +922,7 @@ function renderCatalogoDestino() {
         return;
     }
     el.className = 'catalogo-destino';
-    el.innerHTML = `🎯 <strong>#${String(c.id).padStart(4,'0')}</strong> — ${esc(c.identificacao)}`;
+    el.innerHTML = `<strong>#${String(c.id).padStart(4,'0')}</strong> — ${esc(c.identificacao)}`;
 }
 
 function renderKPIs() {
@@ -949,7 +950,7 @@ function atualizarEstoqueVisual(produtoId, novoEstoque) {
         if (btnAdd) btnAdd.disabled = true;
     } else if (novoEstoque <= 3) {
         el.className   = 'produto-estoque baixo';
-        el.textContent = `⚠️ Último${novoEstoque > 1 ? 's' : ''}: ${novoEstoque}`;
+        el.textContent = `Ultimos: ${novoEstoque}`;
         if (card)   card.classList.remove('esgotado');
         if (btnAdd) btnAdd.disabled = false;
     } else {
@@ -1043,7 +1044,7 @@ async function pagarComanda(id) {
             estadoComandas = estadoComandas.filter(c => c.id !== id);
             if (comandaSelecionadaId === id) comandaSelecionadaId = null;
             render();
-            toast(`Comanda #${String(id).padStart(4,'0')} paga! ✅`, 'ok');
+            toast(`Comanda #${String(id).padStart(4,'0')} paga!`, 'ok');
         }
     } catch(e) {
         toast('Erro ao fechar comanda.', 'erro');

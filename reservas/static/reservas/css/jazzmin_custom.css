@@ -2,16 +2,17 @@
  * jazzmin_custom.css — Identidade visual Arena Ibituruna Beach
  *
  * Cores: roxo #6F42C1 · sidebar #1e1033 · bg #E6F7FF
- * Fontes: DM Sans (corpo) + Syne (títulos)
+ * Fontes: DM Sans (corpo) + Bebas Neue (títulos/estrutura)
  * Referenciado em settings.py via JAZZMIN_SETTINGS["custom_css"]
  * ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 /* ================================================================
-   0. TIPOGRAFIA — DM Sans (corpo) + Syne (títulos)
+   0. TIPOGRAFIA — DM Sans (corpo) + Bebas Neue (estrutura)
 ================================================================ */
 
+/* Base: DM Sans para todo conteúdo legível */
 body,
 .content-wrapper,
 .main-sidebar,
@@ -23,16 +24,55 @@ input, select, textarea, button,
     font-family: 'DM Sans', sans-serif !important;
 }
 
-h1, h2, h3, h4, h5,
+/* Bebas Neue para elementos estruturais — display/títulos */
+h1, h2, h3, h4, h5, h6,
 .brand-text,
-.card-title,
 .content-header h1,
-.page-header,
-.info-box-text,
+.card-title,
+.small-box h3,
+.info-box-text {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-weight: 400 !important; /* Bebas Neue só tem peso 400 */
+    letter-spacing: 0.06em !important;
+}
+
+/* Ajuste de tamanho: Bebas Neue é naturalmente grande — reduzir */
+h1 { font-size: 1.55rem !important; letter-spacing: 0.05em !important; }
+h2 { font-size: 1.35rem !important; letter-spacing: 0.05em !important; }
+h3 { font-size: 1.20rem !important; letter-spacing: 0.05em !important; }
+h4 { font-size: 1.08rem !important; }
+h5 { font-size: 0.98rem !important; }
+h6 { font-size: 0.90rem !important; }
+
+.content-header h1 {
+    font-size: 1.25rem !important;
+    letter-spacing: 0.07em !important;
+}
+
+/* Brand text na sidebar */
+.brand-text {
+    font-size: 1.05rem !important;
+    letter-spacing: 0.10em !important;
+    color: #fff !important;
+}
+
+/* Links do menu lateral — DM Sans (legibilidade), não Bebas */
+.nav-sidebar .nav-link {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.84rem !important;
+    letter-spacing: 0.01em !important;
+}
+
+/* Cabeçalhos de cards */
+.card-title {
+    font-size: 0.95rem !important;
+    letter-spacing: 0.07em !important;
+}
+
+/* Números grandes nos small-boxes */
 .small-box h3 {
-    font-family: 'Syne', sans-serif !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.01em;
+    font-size: 2rem !important;
+    letter-spacing: 0.04em !important;
 }
 
 /* ----------------------------------------------------------------
@@ -67,11 +107,6 @@ h1, h2, h3, h4, h5,
 }
 .brand-link:hover {
     background: var(--arena-sidebar-mid) !important;
-}
-.brand-text {
-    color: #fff !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.02em;
 }
 
 /* Links do menu */
@@ -482,7 +517,7 @@ a:hover {
 .login-logo a,
 .login-logo b {
     color: var(--arena-roxo) !important;
-    font-family: 'Syne', sans-serif !important;
+    font-family: 'Bebas Neue', sans-serif !important;
     font-weight: 800 !important;
     font-size: 1.5rem !important;
 }
@@ -497,7 +532,7 @@ a:hover {
 
 .login-box-msg {
     color: var(--arena-roxo) !important;
-    font-family: 'Syne', sans-serif !important;
+    font-family: 'Bebas Neue', sans-serif !important;
     font-weight: 700 !important;
     font-size: 0.95rem !important;
 }
@@ -550,4 +585,132 @@ a:hover {
         linear-gradient(rgba(111,66,193,.018) 1px, transparent 1px),
         linear-gradient(90deg, rgba(111,66,193,.018) 1px, transparent 1px) !important;
     background-size: 36px 36px !important;
+}
+
+/* ================================================================
+   16. REFINAMENTOS — tabelas, fieldsets, filtros, visual geral
+================================================================ */
+
+/* Remove bordas pesadas das tabelas de listagem */
+#result_list {
+    border: none !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 12px rgba(111,66,193,0.07) !important;
+}
+#result_list thead {
+    background: rgba(111,66,193,0.04) !important;
+}
+#result_list td,
+#result_list th {
+    border-color: rgba(111,66,193,0.07) !important;
+    padding: 11px 14px !important;
+    vertical-align: middle !important;
+}
+
+/* Fieldsets do changeform — sem borda pesada */
+fieldset {
+    border: 1px solid rgba(111,66,193,0.10) !important;
+    border-radius: 12px !important;
+    padding: 20px 20px 12px !important;
+    background: #fff !important;
+    margin-bottom: 16px !important;
+}
+fieldset h2,
+fieldset legend {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 0.80rem !important;
+    letter-spacing: 0.12em !important;
+    color: var(--arena-roxo) !important;
+    border-bottom: none !important;
+    background: transparent !important;
+    padding: 0 0 8px !important;
+    width: 100% !important;
+}
+
+/* Painel de filtros lateral */
+#changelist-filter {
+    background: #fff !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(111,66,193,0.10) !important;
+    box-shadow: 0 2px 10px rgba(111,66,193,0.06) !important;
+    padding: 16px !important;
+}
+#changelist-filter h2 {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.14em !important;
+    color: var(--arena-roxo) !important;
+    border-bottom: 1px solid rgba(111,66,193,0.10) !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 10px !important;
+}
+#changelist-filter h3 {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    color: #374151 !important;
+}
+#changelist-filter li a {
+    color: #4b5563 !important;
+    font-size: 0.84rem !important;
+    border-radius: 6px !important;
+    padding: 3px 6px !important;
+}
+#changelist-filter li a:hover,
+#changelist-filter li.selected a {
+    color: var(--arena-roxo) !important;
+    background: rgba(111,66,193,0.07) !important;
+}
+
+/* Barra de busca da changelist */
+#toolbar form input[type="text"],
+#changelist-search input[type="text"] {
+    border: 1.5px solid rgba(111,66,193,0.20) !important;
+    border-radius: 50px !important;
+    padding: 8px 16px !important;
+    font-size: 0.875rem !important;
+}
+#toolbar form input[type="submit"],
+#changelist-search input[type="submit"] {
+    border-radius: 50px !important;
+    background: var(--arena-roxo) !important;
+    border-color: var(--arena-roxo) !important;
+    color: #fff !important;
+    font-size: 0.8rem !important;
+    padding: 8px 16px !important;
+}
+
+/* Inline tabular — mesma limpeza */
+.inline-group {
+    border: 1px solid rgba(111,66,193,0.09) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+.inline-group h2 {
+    background: rgba(111,66,193,0.04) !important;
+    border-bottom: 1px solid rgba(111,66,193,0.09) !important;
+    font-size: 0.80rem !important;
+    letter-spacing: 0.10em !important;
+    color: var(--arena-roxo) !important;
+    padding: 12px 16px !important;
+}
+
+/* Wrapper do módulo/changeform */
+.module {
+    border: 1px solid rgba(111,66,193,0.08) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    margin-bottom: 16px !important;
+}
+.module caption,
+.module h2 {
+    background: rgba(111,66,193,0.04) !important;
+    color: var(--arena-roxo) !important;
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 0.80rem !important;
+    letter-spacing: 0.12em !important;
+    border-bottom: 1px solid rgba(111,66,193,0.08) !important;
+    padding: 10px 16px !important;
 }

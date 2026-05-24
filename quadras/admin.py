@@ -19,7 +19,7 @@ class QuadraAdmin(admin.ModelAdmin):
             if reservas_futuras > 0:
                 self.message_user(
                     request,
-                    f'⚠️ Atenção: A quadra "{obj.nome}" foi desativada, mas existem {reservas_futuras} reserva(s) futuras para ela.',
+                    f'Atencao: A quadra "{obj.nome}" foi desativada, mas existem {reservas_futuras} reserva(s) futuras para ela.',
                     level=messages.WARNING
                 )
         super().save_model(request, obj, form, change)

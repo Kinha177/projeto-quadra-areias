@@ -124,17 +124,16 @@ JAZZMIN_SETTINGS = {
     "site_header":  "Arena Ibituruna Beach",
     "site_brand":   "Arena Ibituruna",
     "site_logo":    "reservas/img/logo_oficial.png",
-    "welcome_sign": "Bem-vindo ao sistema de gestão 🏐",
+    "welcome_sign": "Bem-vindo ao sistema de gestao",
     "show_sidebar": True,
 
-    # CSS customizado com identidade visual da Arena (roxo #6F42C1 + DM Sans + Syne)
     "custom_css": "reservas/css/jazzmin_custom.css",
 
     "topmenu_links": [
-        {"name": "🌐 Ver o Site",   "url": "/",             "new_window": True},
-        {"name": "🍺 PDV / Bar",    "url": "/pdv/",         "new_window": True},
-        {"name": "📊 Financeiro",   "url": "/financeiro/"},
-        {"name": "📅 Agendamento",  "url": "/agendamento/", "new_window": True},
+        {"name": "Ver o Site",   "url": "/",             "new_window": True},
+        {"name": "PDV / Bar",    "url": "/pdv/",         "new_window": True},
+        {"name": "Financeiro",   "url": "/financeiro/"},
+        {"name": "Agendamento",  "url": "/agendamento/", "new_window": True},
     ],
 
     "icons": {

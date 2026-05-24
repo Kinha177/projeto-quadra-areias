@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
 
     <style>
         /* ================================================================
@@ -645,7 +646,7 @@
         </a>
 
         <div class="d-flex gap-2 justify-content-end" style="flex:1;">
-            <a href="/agendamento/" class="btn-nav">📅 Ver Reservas</a>
+            <a href="/agendamento/" class="btn-nav">Ver Reservas</a>
         </div>
     </div>
 </nav>
@@ -661,7 +662,7 @@
         <p class="page-eyebrow">Gestão financeira</p>
         <h1 class="page-title">
             Fluxo de Caixa
-            <span class="month-badge">📅 {{ mes_texto }}</span>
+            <span class="month-badge">{{ mes_texto }}</span>
         </h1>
         <p class="page-meta">Visão consolidada dos mensalistas ativos neste mês</p>
     </div>
@@ -673,32 +674,26 @@
 
         <!-- OK -->
         <div class="kpi-card kpi-ok">
-            <div class="kpi-icon-wrap">✅</div>
+            <div class="kpi-icon-wrap"><i class="fas fa-check-circle"></i></div>
             <div class="kpi-number">{{ total_ok }}</div>
             <div class="kpi-label">Pagamentos OK</div>
-            <div class="kpi-valor">
-                💰 R$ {{ receita_confirmada }}
-            </div>
+            <div class="kpi-valor">R$ {{ receita_confirmada }}</div>
         </div>
 
         <!-- A Vencer -->
         <div class="kpi-card kpi-avencer">
-            <div class="kpi-icon-wrap">🕐</div>
+            <div class="kpi-icon-wrap"><i class="fas fa-clock"></i></div>
             <div class="kpi-number">{{ total_avencer }}</div>
             <div class="kpi-label">A Vencer</div>
-            <div class="kpi-valor">
-                📆 No prazo
-            </div>
+            <div class="kpi-valor">No prazo</div>
         </div>
 
         <!-- Atrasados -->
         <div class="kpi-card kpi-atrasado">
-            <div class="kpi-icon-wrap">⚠️</div>
+            <div class="kpi-icon-wrap"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="kpi-number">{{ total_atrasado }}</div>
             <div class="kpi-label">Atrasados</div>
-            <div class="kpi-valor">
-                🔴 R$ {{ receita_pendente }} em aberto
-            </div>
+            <div class="kpi-valor">R$ {{ receita_pendente }} em aberto</div>
         </div>
 
     </div>
@@ -732,9 +727,9 @@
 
         <!-- Header da tabela -->
         <div class="table-card-header">
-            <h5>👥 Mensalistas — {{ mes_texto }}</h5>
+            <h5>Mensalistas — {{ mes_texto }}</h5>
             <div class="table-search">
-                🔍
+                <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar aluno..." onkeyup="filterTable()">
             </div>
         </div>
@@ -788,7 +783,7 @@
                     {% empty %}
                     <tr class="empty-row">
                         <td colspan="3">
-                            <div class="empty-icon">🏖️</div>
+                            <div class="empty-icon"><i class="fas fa-volleyball-ball"></i></div>
                             <p class="empty-text">Nenhum aluno mensalista cadastrado ainda.</p>
                         </td>
                     </tr>
