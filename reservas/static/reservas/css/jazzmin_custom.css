@@ -1,19 +1,39 @@
-/*
- * ================================================================
- * ENTREGÁVEL 3 — jazzmin_custom.css
+/* ================================================================
+ * jazzmin_custom.css — Identidade visual Arena Ibituruna Beach
  *
- * Caminho no projeto:
- *   reservas/static/reservas/css/jazzmin_custom.css
- *
- * Referenciado no settings.py como:
- *   "custom_css": "reservas/css/jazzmin_custom.css"
- *
- * O que esse arquivo faz:
- *   Injeta a identidade visual da Arena (roxo #6F42C1) em toda a
- *   interface do Django Admin com Jazzmin, substituindo o azul
- *   padrão do Bootstrap/AdminLTE sem precisar editar arquivos core.
- * ================================================================
- */
+ * Cores: roxo #6F42C1 · sidebar #1e1033 · bg #E6F7FF
+ * Fontes: DM Sans (corpo) + Syne (títulos)
+ * Referenciado em settings.py via JAZZMIN_SETTINGS["custom_css"]
+ * ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ================================================================
+   0. TIPOGRAFIA — DM Sans (corpo) + Syne (títulos)
+================================================================ */
+
+body,
+.content-wrapper,
+.main-sidebar,
+.nav-sidebar,
+input, select, textarea, button,
+.form-control,
+.dropdown-menu,
+.table {
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5,
+.brand-text,
+.card-title,
+.content-header h1,
+.page-header,
+.info-box-text,
+.small-box h3 {
+    font-family: 'Syne', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em;
+}
 
 /* ----------------------------------------------------------------
    VARIÁVEIS DA MARCA — definem tudo em um lugar só
@@ -176,14 +196,21 @@
    4. BOTÕES — substituindo azul Bootstrap pelo roxo da Arena
 ================================================================ */
 
+/* Base: todos os botões usam pill (espelha o front-end) */
+.btn {
+    border-radius: 50px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    transition: all 0.22s ease !important;
+}
+.btn-sm { border-radius: 20px !important; }
+
 /* Botão primário */
 .btn-primary {
     background-color: var(--arena-roxo) !important;
     border-color: var(--arena-roxo) !important;
     box-shadow: 0 4px 14px var(--arena-roxo-glow) !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    transition: all 0.22s ease !important;
+    font-weight: 700 !important;
 }
 .btn-primary:hover,
 .btn-primary:focus {
@@ -207,7 +234,6 @@ button[type="submit"].btn-primary {
 .btn-outline-primary {
     color: var(--arena-roxo) !important;
     border-color: var(--arena-roxo) !important;
-    border-radius: 8px !important;
 }
 .btn-outline-primary:hover {
     background-color: var(--arena-roxo) !important;
@@ -296,6 +322,28 @@ fieldset legend {
     font-size: 0.85rem !important;
 }
 
+/* Inputs — estado base */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="url"],
+input[type="search"],
+select,
+textarea {
+    border: 1.5px solid rgba(111,66,193,0.18) !important;
+    border-radius: 10px !important;
+    padding: 9px 14px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
 /* Inputs em foco */
 .form-control:focus,
 input:focus,
@@ -304,6 +352,33 @@ textarea:focus {
     border-color: var(--arena-roxo) !important;
     box-shadow: 0 0 0 3px rgba(111,66,193,0.14) !important;
     outline: none !important;
+}
+
+/* Barra de ações (Salvar / Deletar / Adicionar outro) */
+.submit-row {
+    background: rgba(230,247,255,0.85) !important;
+    border-top: 1px solid rgba(111,66,193,0.10) !important;
+    border-radius: 0 0 16px 16px !important;
+    padding: 16px 20px !important;
+    gap: 10px !important;
+}
+.submit-row input[type="submit"],
+.submit-row a.deletelink,
+.submit-row a.closelink {
+    border-radius: 50px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    padding: 9px 24px !important;
+    font-size: 0.88rem !important;
+}
+.submit-row a.deletelink {
+    background: rgba(220,38,38,0.08) !important;
+    color: #991b1b !important;
+    border: 1.5px solid rgba(220,38,38,0.25) !important;
+}
+.submit-row a.deletelink:hover {
+    background: #dc2626 !important;
+    color: #fff !important;
 }
 
 /* Tabs do changeform */
@@ -357,17 +432,12 @@ textarea:focus {
 }
 
 /* ================================================================
-   10. BOTÃO DE LOGIN
+   10. BOTÃO DE LOGIN (apenas o submit; estilo do card está na seção 13)
 ================================================================ */
 
-.login-page .login-card-body,
 #login-form .submit-row input[type="submit"] {
     background: var(--arena-roxo) !important;
     border-color: var(--arena-roxo) !important;
-}
-
-.login-box-msg {
-    color: rgba(255,255,255,0.80) !important;
 }
 
 /* ================================================================
@@ -395,4 +465,89 @@ a:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(111,66,193,0.55);
+}
+
+/* ================================================================
+   13. LOGIN PAGE — identidade visual completa
+================================================================ */
+
+.login-page {
+    background: var(--arena-ciano) !important;
+    background-image:
+        linear-gradient(rgba(111,66,193,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,66,193,.025) 1px, transparent 1px) !important;
+    background-size: 36px 36px !important;
+}
+
+.login-logo a,
+.login-logo b {
+    color: var(--arena-roxo) !important;
+    font-family: 'Syne', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 1.5rem !important;
+}
+
+.login-card-body {
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(111,66,193,0.16), 0 4px 16px rgba(0,0,0,0.06) !important;
+    border: 1.5px solid rgba(111,66,193,0.12) !important;
+    padding: 32px !important;
+    background: #fff !important;
+}
+
+.login-box-msg {
+    color: var(--arena-roxo) !important;
+    font-family: 'Syne', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+}
+
+.login-page .btn-primary,
+#login-form .submit-row input[type="submit"] {
+    background: linear-gradient(135deg, var(--arena-roxo) 0%, #8B5CF6 100%) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 12px !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 6px 20px var(--arena-roxo-glow) !important;
+    transition: all 0.22s ease !important;
+}
+.login-page .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 28px rgba(111,66,193,0.50) !important;
+}
+
+/* ================================================================
+   14. DASHBOARD — small-boxes e cards de resumo
+================================================================ */
+
+.small-box {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(111,66,193,0.12), 0 1px 4px rgba(0,0,0,0.04) !important;
+    border: 1px solid rgba(111,66,193,0.07) !important;
+}
+
+.small-box .icon {
+    opacity: 0.20 !important;
+}
+
+.small-box-footer {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+}
+
+/* ================================================================
+   15. FUNDO ATMOSFÉRICO — grade sutil no content-wrapper
+================================================================ */
+
+.content-wrapper {
+    background-image:
+        linear-gradient(rgba(111,66,193,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,66,193,.018) 1px, transparent 1px) !important;
+    background-size: 36px 36px !important;
 }

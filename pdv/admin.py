@@ -96,7 +96,8 @@ class ItemComandaInline(admin.TabularInline):
     @admin.display(description='Subtotal')
     def subtotal_display(self, obj):
         return format_html(
-            '<strong style="color:#6F42C1;">R$ {:.2f}</strong>', obj.subtotal
+            '<strong style="color:#6F42C1;">R$ {}</strong>',
+            f'{obj.subtotal:.2f}',
         )
 
     def has_add_permission(self, request, obj=None):
@@ -124,8 +125,8 @@ class ComandaAdmin(admin.ModelAdmin):
     @admin.display(description='#', ordering='pk')
     def numero(self, obj):
         return format_html(
-            '<span style="font-family:monospace;font-weight:700;color:#6F42C1;">#{:04d}</span>',
-            obj.pk,
+            '<span style="font-family:monospace;font-weight:700;color:#6F42C1;">#{}</span>',
+            f'{obj.pk:04d}',
         )
 
     @admin.display(description='Status')
@@ -149,8 +150,8 @@ class ComandaAdmin(admin.ModelAdmin):
     def total_display(self, obj):
         return format_html(
             '<strong style="color:#6F42C1;font-variant-numeric:tabular-nums;">'
-            'R$ {:.2f}</strong>',
-            obj.total,
+            'R$ {}</strong>',
+            f'{obj.total:.2f}',
         )
 
 

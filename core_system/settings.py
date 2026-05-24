@@ -126,62 +126,65 @@ JAZZMIN_SETTINGS = {
     "site_logo":    "reservas/img/logo_oficial.png",
     "welcome_sign": "Bem-vindo ao sistema de gestão 🏐",
     "show_sidebar": True,
- 
-    # Links rápidos no topo — agora com o PDV
+
+    # CSS customizado com identidade visual da Arena (roxo #6F42C1 + DM Sans + Syne)
+    "custom_css": "reservas/css/jazzmin_custom.css",
+
     "topmenu_links": [
-        {"name": "🌐 Ver o Site",        "url": "/",             "new_window": True},
-        {"name": "🍺 PDV / Bar",          "url": "/pdv/",         "new_window": True},
-        {"name": "📊 Financeiro",         "url": "/financeiro/"},
-        {"name": "📅 Agendamento",        "url": "/agendamento/", "new_window": True},
+        {"name": "🌐 Ver o Site",   "url": "/",             "new_window": True},
+        {"name": "🍺 PDV / Bar",    "url": "/pdv/",         "new_window": True},
+        {"name": "📊 Financeiro",   "url": "/financeiro/"},
+        {"name": "📅 Agendamento",  "url": "/agendamento/", "new_window": True},
     ],
- 
-    # Ícones — FontAwesome 5 (já incluso no Jazzmin)
+
     "icons": {
-        # Apps já existentes
-        "auth":                "fas fa-users-cog",
-        "auth.user":           "fas fa-user-shield",
-        "auth.group":          "fas fa-users",
-        "alunos.Aluno":        "fas fa-user-graduate",
-        "alunos.Pagamento":    "fas fa-dollar-sign",
-        "quadras.Quadra":      "fas fa-volleyball-ball",
-        "reservas.Reserva":    "fas fa-calendar-check",
-        # ── PDV / Bar (novos) ──
-        "pdv":                 "fas fa-cash-register",
-        "pdv.Categoria":       "fas fa-tags",
-        "pdv.Produto":         "fas fa-burger",
-        "pdv.Comanda":         "fas fa-receipt",
-        "pdv.ItemComanda":     "fas fa-list-ul",
+        "auth":             "fas fa-users-cog",
+        "auth.user":        "fas fa-user-shield",
+        "auth.group":       "fas fa-users",
+        "alunos.Aluno":     "fas fa-user-graduate",
+        "alunos.Pagamento": "fas fa-dollar-sign",
+        "quadras.Quadra":   "fas fa-volleyball-ball",
+        "reservas.Reserva": "fas fa-calendar-check",
+        "pdv":              "fas fa-cash-register",
+        "pdv.Categoria":    "fas fa-tags",
+        "pdv.Produto":      "fas fa-burger",
+        "pdv.Comanda":      "fas fa-receipt",
+        "pdv.ItemComanda":  "fas fa-list-ul",
     },
     "default_icon_parents":  "fas fa-chevron-right",
     "default_icon_children": "fas fa-circle",
- 
-    # Ordem do menu lateral (mais usado no topo)
+
     "order_with_respect_to": [
-        "pdv.Comanda",          # 1. Ver histórico de comandas
-        "pdv.Produto",          # 2. Ajustar estoque e preços
-        "pdv.Categoria",        # 3. Raramente muda
-        "alunos.Pagamento",     # 4. Mensalidades
-        "reservas.Reserva",     # 5. Agendamentos
+        "pdv.Comanda",
+        "pdv.Produto",
+        "pdv.Categoria",
+        "alunos.Pagamento",
+        "reservas.Reserva",
         "alunos.Aluno",
         "quadras.Quadra",
         "auth",
     ],
- 
-    "show_ui_builder":       False,
-    "related_modal_active":  True,
-    "navigation_expanded":   True,
-    "actions_sticky_top":    True,
+
+    "show_ui_builder":      False,
+    "related_modal_active": True,
+    "navigation_expanded":  True,
+    "actions_sticky_top":   True,
 }
- 
+
 JAZZMIN_UI_TWEAKS = {
-    "navbar":                    "navbar-dark",
-    "theme":                     "darkly",
+    # Navbar escura — compatível com a sidebar #1e1033
+    "navbar": "navbar-dark",
+
+    # Tema base neutro; jazzmin_custom.css controla todas as cores via !important
+    "theme":  "default",
+
+    # Sidebar escura com destaque na cor primária (roxo)
     "sidebar":                   "sidebar-dark-primary",
     "sidebar_nav_child_indent":  True,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style":  False,
     "sidebar_nav_flat_style":    False,
-    "actions_sticky_top":        True,
+
     "button_classes": {
         "primary":   "btn-primary",
         "secondary": "btn-secondary",
@@ -190,36 +193,10 @@ JAZZMIN_UI_TWEAKS = {
         "danger":    "btn-danger",
         "success":   "btn-success",
     },
-}
- 
- 
-JAZZMIN_UI_TWEAKS = {
-    # Navbar escura para contraste com o roxo
-    "navbar":       "navbar-dark",
- 
-    # Tema base mais neutro — o CSS customizado vai sobrescrever as cores
-    "theme":        "darkly",          # darkly dá uma base escura elegante
- 
-    # Sidebar escura com a cor primária
-    "sidebar":                  "sidebar-dark-primary",
-    "sidebar_nav_child_indent": True,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style":  False,
-    "sidebar_nav_flat_style":    False,
- 
-    # Botões — todos alinhados com a marca
-    "button_classes": {
-        "primary":   "btn-primary",
-        "secondary": "btn-secondary",
-        "info":      "btn-info",
-        "warning":   "btn-warning",
-        "danger":    "btn-danger",
-        "success":   "btn-success",
-    },
- 
-    # Sticky no topo ao rolar — o botão Salvar nunca some
+
     "actions_sticky_top": True,
 }
+
 
 # ==========================================
 # CONFIGURAÇÕES DE SEGURANÇA PARA PRODUÇÃO
@@ -233,48 +210,3 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-
-# ==========================================
-# CONFIGURAÇÕES DO JAZZMIN (AUDITORIA)
-# ==========================================
-JAZZMIN_SETTINGS = {
-    "site_title": "Arena Admin",
-    "site_header": "Arena Ibituruna Beach",
-    "site_brand": "Arena Ibituruna",
-    "site_logo": "reservas/img/logo_oficial.png",
-    "welcome_sign": "Olá! Bom trabalho hoje 🏐",
-    "show_sidebar": True,
-    
-    "topmenu_links": [
-        {"name": "🌐 Ver o Site", "url": "/", "new_window": True},
-        {"name": "📊 Painel Financeiro", "url": "/financeiro/"},
-        {"name": "📅 Ver Agendamento", "url": "/agendamento/", "new_window": True},
-    ],
-    
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.group": "fas fa-users",
-        "alunos.Aluno": "fas fa-user-graduate",
-        "alunos.Pagamento": "fas fa-dollar-sign",
-        "quadras.Quadra": "fas fa-volleyball-ball",
-        "reservas.Reserva": "fas fa-calendar-check",
-    },
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-    
-    "order_with_respect_to": [
-        "alunos.Pagamento",
-        "reservas.Reserva",
-        "alunos.Aluno",
-        "quadras.Quadra",
-        "auth",
-    ],
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar": "navbar-dark",
-    "theme": "lumen",
-    "sidebar": "sidebar-dark-primary",
-    "actions_sticky_top": True,
-}

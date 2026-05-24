@@ -4,906 +4,1176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financeiro — Arena Ibituruna Beach</title>
+    <title>PDV — Bar & Consumo · Arena Ibituruna Beach</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* ================================================================
-           DESIGN SYSTEM — PAINEL FINANCEIRO
-           Conceito: "Command Center" — cockpit do dono, não planilha genérica
-           O dono vê o status do mês em < 2 segundos ao abrir a página
-        ================================================================ */
+    /* ================================================================
+       PDV COCKPIT — Design System "Command Center"
+       Layout: coluna esquerda (comandas) ⟷ coluna direita (catálogo)
+       Mobile: abas alternáveis
+    ================================================================ */
 
-        :root {
-            /* Paleta da marca */
-            --roxo:           #6F42C1;
-            --roxo-hover:     #5A32A3;
-            --roxo-deep:      #3D1F8A;
-            --roxo-glass:     rgba(111, 66, 193, 0.10);
-            --roxo-glow:      rgba(111, 66, 193, 0.22);
-            --ciano-bg:       #E6F7FF;
-            --ciano-mid:      #d0eeff;
+    :root {
+        --roxo:           #6F42C1;
+        --roxo-hover:     #5A32A3;
+        --roxo-glass:     rgba(111,66,193,.10);
+        --roxo-glow:      rgba(111,66,193,.28);
+        --ciano:          #E6F7FF;
+        --verde:          #059669;
+        --verde-bg:       rgba(5,150,105,.09);
+        --vermelho:       #DC2626;
+        --vermelho-bg:    rgba(220,38,38,.08);
+        --laranja:        #D97706;
+        --laranja-bg:     rgba(217,119,6,.09);
+        --cinza-texto:    #111827;
+        --cinza-medio:    #374151;
+        --cinza-suave:    #6B7280;
+        --cinza-linha:    rgba(0,0,0,.055);
+        --branco:         #ffffff;
+        --sidebar-bg:     #1e1033;
 
-            /* Status financeiro */
-            --verde:          #059669;
-            --verde-bg:       rgba(5, 150, 105, 0.08);
-            --verde-border:   rgba(5, 150, 105, 0.20);
-            --verde-glow:     rgba(5, 150, 105, 0.18);
+        --shadow-sm:  0 2px 8px rgba(111,66,193,.08), 0 1px 2px rgba(0,0,0,.04);
+        --shadow-md:  0 6px 24px rgba(111,66,193,.13), 0 2px 6px rgba(0,0,0,.04);
+        --shadow-lg:  0 16px 48px rgba(111,66,193,.20), 0 4px 12px rgba(0,0,0,.06);
+        --shadow-btn: 0 4px 16px rgba(111,66,193,.40);
 
-            --laranja:        #D97706;
-            --laranja-bg:     rgba(217, 119, 6, 0.08);
-            --laranja-border: rgba(217, 119, 6, 0.22);
-            --laranja-glow:   rgba(217, 119, 6, 0.15);
+        --r-sm:  10px;
+        --r-md:  16px;
+        --r-lg:  22px;
+        --r-pill:50px;
 
-            --vermelho:       #DC2626;
-            --vermelho-bg:    rgba(220, 38, 38, 0.07);
-            --vermelho-border:rgba(220, 38, 38, 0.20);
-            --vermelho-glow:  rgba(220, 38, 38, 0.15);
+        --topbar-h: 64px;
+    }
 
-            /* Neutros */
-            --cinza-texto:    #111827;
-            --cinza-medio:    #374151;
-            --cinza-suave:    #6B7280;
-            --cinza-linha:    rgba(0,0,0,0.05);
-            --branco:         #ffffff;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-            /* Elevação */
-            --shadow-sm:    0 2px 8px rgba(111,66,193,0.07), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md:    0 6px 24px rgba(111,66,193,0.12), 0 2px 6px rgba(0,0,0,0.04);
-            --shadow-lg:    0 16px 48px rgba(111,66,193,0.18), 0 4px 12px rgba(0,0,0,0.06);
-            --shadow-kpi:   0 8px 32px rgba(111,66,193,0.14), 0 2px 8px rgba(0,0,0,0.06);
+    html, body {
+        height: 100%;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--ciano);
+        color: var(--cinza-texto);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;          /* cockpit sem scroll de página */
+    }
 
-            --radius-sm:    10px;
-            --radius-md:    18px;
-            --radius-lg:    24px;
-            --radius-pill:  50px;
-        }
+    /* ── Fundo atmosférico ─────────────────────────────────────── */
+    body::before {
+        content:'';
+        position:fixed; inset:0;
+        background-image:
+            linear-gradient(rgba(111,66,193,.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(111,66,193,.025) 1px, transparent 1px);
+        background-size: 36px 36px;
+        pointer-events:none; z-index:0;
+    }
 
-        /* ═══ SISTEMA TIPOGRÁFICO — Anton + CSS Grunge ══════════ */
-        .arena-title {
-            font-family: 'Anton', sans-serif; /* arena-title aplicado */
-            font-weight: 400;
-            letter-spacing: 0.04em;
-            line-height: 1.05;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-        }
-        .arena-title.title-texture::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-            background-size: 180px 180px;
-            mix-blend-mode: multiply;
-            opacity: 0.38;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .arena-title.title-texture-light::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-            background-size: 140px 140px;
-            mix-blend-mode: multiply;
-            opacity: 0.22;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .title-xl { font-size: clamp(2.4rem, 6vw, 4.2rem);  }
-        .title-lg { font-size: clamp(1.8rem, 4vw, 2.8rem);   }
-        .title-md { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
-        .title-sm { font-size: clamp(1rem, 2vw, 1.25rem);    }
-        .title-accent { color: var(--roxo); }
+    /* ================================================================
+       TOPBAR
+    ================================================================ */
+    .topbar {
+        position: fixed; top:0; left:0; right:0;
+        height: var(--topbar-h);
+        background: var(--sidebar-bg);
+        border-bottom: 1px solid rgba(111,66,193,.25);
+        display: flex; align-items: center;
+        padding: 0 24px; gap: 20px;
+        z-index: 200;
+        box-shadow: 0 2px 16px rgba(0,0,0,.30);
+    }
+    .topbar-brand {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+        color: #fff;
+        letter-spacing: -.01em;
+        display: flex; align-items: center; gap: 10px;
+        text-decoration: none;
+    }
+    .topbar-brand .brand-icon {
+        width: 34px; height: 34px;
+        background: var(--roxo);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        box-shadow: 0 2px 10px var(--roxo-glow);
+    }
+    .topbar-divider { width:1px; height:28px; background:rgba(255,255,255,.12); }
 
-        *, *::before, *::after { box-sizing: border-box; }
+    /* KPI chips no topbar */
+    .topbar-kpi {
+        display: flex; align-items: center; gap: 8px;
+        padding: 6px 16px;
+        border-radius: var(--r-pill);
+        background: rgba(255,255,255,.07);
+        border: 1px solid rgba(255,255,255,.10);
+        font-size: .8rem;
+        font-weight: 600;
+        color: rgba(255,255,255,.85);
+        white-space: nowrap;
+    }
+    .topbar-kpi strong { color:#fff; }
+    .topbar-kpi .dot {
+        width:7px; height:7px; border-radius:50%;
+    }
 
-        body {
-            background: var(--ciano-bg);
-            font-family: 'DM Sans', sans-serif;
-            color: var(--cinza-texto);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
+    /* Botão Nova Comanda */
+    .btn-nova-comanda {
+        margin-left: auto;
+        background: var(--roxo);
+        color: #fff;
+        border: none;
+        border-radius: var(--r-pill);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: .875rem;
+        padding: 9px 22px;
+        cursor: pointer;
+        box-shadow: var(--shadow-btn);
+        display: flex; align-items: center; gap: 8px;
+        transition: all .22s cubic-bezier(.34,1.56,.64,1);
+        white-space: nowrap;
+    }
+    .btn-nova-comanda:hover {
+        background: var(--roxo-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px var(--roxo-glow);
+    }
 
-        /* ---- Malha decorativa de fundo ---- */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(111,66,193,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(111,66,193,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
+    .topbar-back {
+        color: rgba(255,255,255,.60);
+        text-decoration: none;
+        font-size: .82rem;
+        font-weight: 600;
+        display: flex; align-items: center; gap: 6px;
+        transition: color .18s;
+    }
+    .topbar-back:hover { color:#fff; }
 
-        /* ---- Orbe de atmosfera ---- */
-        body::after {
-            content: '';
-            position: fixed;
-            top: -180px; right: -180px;
-            width: 560px; height: 560px;
-            background: radial-gradient(circle, rgba(111,66,193,0.09) 0%, transparent 65%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-        }
+    /* ================================================================
+       LAYOUT PRINCIPAL (dois painéis)
+    ================================================================ */
+    .pdv-layout {
+        position: fixed;
+        top: var(--topbar-h); left:0; right:0; bottom:0;
+        display: grid;
+        grid-template-columns: 1fr 380px; /* comandas | catálogo */
+        z-index: 1;
+    }
 
-        /* ================================================================
-           NAVBAR
-        ================================================================ */
-        .navbar-fin {
-            position: relative;
-            z-index: 100;
-            padding: 18px 0;
-            background: rgba(230,247,255,0.82);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(111,66,193,0.09);
-        }
-        .navbar-logo {
-            height: 56px;
-            object-fit: contain;
-        }
-        @media (min-width: 992px) { .navbar-logo { height: 96px; } }
+    /* ── Painel esquerdo: grade de comandas ── */
+    .pane-comandas {
+        overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: transparent;
+    }
+    .pane-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 4px;
+    }
+    .pane-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--cinza-texto);
+    }
+    .pane-count {
+        font-size: .75rem; font-weight: 700;
+        color: var(--cinza-suave);
+        background: rgba(0,0,0,.06);
+        border-radius: var(--r-pill);
+        padding: 3px 10px;
+    }
 
-        .btn-nav {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--roxo);
-            color: var(--branco);
-            border: none;
-            border-radius: var(--radius-pill);
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            font-size: 0.865rem;
-            padding: 9px 22px;
-            text-decoration: none;
-            box-shadow: 0 4px 14px var(--roxo-glow);
-            transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .btn-nav:hover {
-            background: var(--roxo-hover);
-            color: var(--branco);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(111,66,193,0.40);
-        }
+    /* ── Painel direito: catálogo de produtos ── */
+    .pane-catalogo {
+        background: var(--branco);
+        border-left: 1px solid rgba(111,66,193,.10);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: -4px 0 24px rgba(111,66,193,.08);
+    }
+    .catalogo-header {
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid var(--cinza-linha);
+        flex-shrink: 0;
+    }
+    .catalogo-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: .95rem;
+        color: var(--cinza-texto);
+        margin-bottom: 10px;
+    }
+    /* Destino ativo — qual comanda vai receber os produtos */
+    .catalogo-destino {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 14px;
+        border-radius: var(--r-sm);
+        background: var(--roxo-glass);
+        border: 1px solid rgba(111,66,193,.18);
+        font-size: .8rem;
+        font-weight: 600;
+        color: var(--roxo);
+        min-height: 36px;
+    }
+    .catalogo-destino.vazio {
+        color: var(--cinza-suave);
+        background: rgba(0,0,0,.03);
+        border-color: rgba(0,0,0,.08);
+    }
 
-        /* ================================================================
-           PÁGINA — HEADER
-        ================================================================ */
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-        }
+    /* Scroll interno do catálogo */
+    .catalogo-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px 16px 20px;
+    }
+    .cat-label {
+        font-size: .68rem;
+        font-weight: 800;
+        letter-spacing: .10em;
+        text-transform: uppercase;
+        color: var(--cinza-suave);
+        padding: 14px 4px 8px;
+    }
+    .cat-label:first-child { padding-top: 4px; }
 
-        .page-header {
-            padding: 52px 0 44px;
-        }
-        .page-eyebrow {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--roxo);
-            opacity: 0.7;
-            margin-bottom: 8px;
-        }
-        .page-title {
-            font-family: 'Anton', sans-serif; /* arena-title aplicado */
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            font-weight: 800;
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            letter-spacing: -0.025em;
-            color: var(--cinza-texto);
-            line-height: 1.08;
-            margin-bottom: 6px;
-        }
-        .page-title span { color: var(--roxo); }
-        .page-meta {
-            font-size: 0.9rem;
-            color: var(--cinza-suave);
-            font-weight: 400;
-            margin: 0;
-        }
-        /* Badge do mês ao lado do título */
-        .month-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: linear-gradient(135deg, var(--roxo) 0%, #8B5CF6 100%);
-            color: var(--branco);
-            border-radius: var(--radius-pill);
-            padding: 6px 18px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            box-shadow: 0 4px 16px var(--roxo-glow);
-            margin-left: 12px;
-            vertical-align: middle;
-        }
+    /* Card de produto no catálogo */
+    .produto-card {
+        display: flex; align-items: center; gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--r-md);
+        border: 1.5px solid transparent;
+        background: #fafafa;
+        cursor: pointer;
+        transition: all .18s ease;
+        margin-bottom: 8px;
+        user-select: none;
+    }
+    .produto-card:hover:not(.esgotado) {
+        background: var(--roxo-glass);
+        border-color: rgba(111,66,193,.22);
+        transform: translateX(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+    .produto-card.esgotado {
+        opacity: .45;
+        cursor: not-allowed;
+        filter: grayscale(.6);
+    }
+    .produto-card.adding {
+        background: rgba(5,150,105,.08);
+        border-color: rgba(5,150,105,.30);
+        transform: scale(.98);
+    }
+    .produto-foto {
+        width: 48px; height: 48px;
+        border-radius: var(--r-sm);
+        object-fit: cover;
+        background: var(--ciano);
+        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        overflow: hidden;
+    }
+    .produto-foto img {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+    .produto-info { flex: 1; min-width: 0; }
+    .produto-nome {
+        font-size: .85rem;
+        font-weight: 600;
+        color: var(--cinza-texto);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .produto-preco {
+        font-size: .78rem;
+        font-weight: 700;
+        color: var(--roxo);
+        margin-top: 2px;
+    }
+    .produto-estoque {
+        font-size: .68rem;
+        color: var(--cinza-suave);
+        font-weight: 500;
+    }
+    .produto-estoque.baixo { color: var(--laranja); font-weight: 700; }
+    .produto-estoque.esgotado { color: var(--vermelho); font-weight: 700; }
+    .btn-add-produto {
+        width: 30px; height: 30px;
+        background: var(--roxo);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.1rem;
+        cursor: pointer;
+        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        transition: all .18s ease;
+        box-shadow: 0 2px 8px var(--roxo-glow);
+    }
+    .btn-add-produto:hover:not(:disabled) {
+        background: var(--roxo-hover);
+        transform: scale(1.12);
+    }
+    .btn-add-produto:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
 
-        /* ================================================================
-           KPI CARDS — alto impacto visual
-        ================================================================ */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 44px;
-        }
-        @media (max-width: 767px) {
-            .kpi-grid { grid-template-columns: 1fr; gap: 14px; }
-        }
-        @media (min-width: 768px) and (max-width: 991px) {
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
-        }
+    /* ================================================================
+       CARDS DE COMANDA (painel esquerdo)
+    ================================================================ */
+    .comanda-card {
+        background: var(--branco);
+        border-radius: var(--r-lg);
+        border: 2px solid transparent;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        transition: all .22s ease;
+        cursor: pointer;
+    }
+    .comanda-card:hover { box-shadow: var(--shadow-md); }
+    .comanda-card.ativa {
+        border-color: var(--roxo);
+        box-shadow: var(--shadow-md), 0 0 0 3px rgba(111,66,193,.12);
+    }
 
-        .kpi-card {
-            position: relative;
-            border-radius: var(--radius-lg);
-            padding: 28px 28px 24px;
-            overflow: hidden;
-            box-shadow: var(--shadow-kpi);
-            border: 1px solid transparent;
-            transition: transform 0.28s ease, box-shadow 0.28s ease;
-        }
-        .kpi-card:hover {
-            transform: translateY(-4px);
-        }
+    /* Cabeçalho do card */
+    .cc-head {
+        padding: 14px 18px 12px;
+        display: flex; align-items: center; gap: 12px;
+        border-bottom: 1px solid var(--cinza-linha);
+    }
+    .cc-numero {
+        font-family: monospace;
+        font-weight: 800;
+        font-size: .82rem;
+        color: var(--roxo);
+        background: var(--roxo-glass);
+        border-radius: 6px;
+        padding: 3px 8px;
+        flex-shrink: 0;
+    }
+    .cc-nome {
+        font-weight: 700;
+        font-size: .92rem;
+        color: var(--cinza-texto);
+        flex: 1;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cc-hora {
+        font-size: .72rem;
+        color: var(--cinza-suave);
+        font-weight: 500;
+        flex-shrink: 0;
+    }
 
-        /* Fundo glassmorphism por variante */
-        .kpi-ok {
-            background: linear-gradient(145deg,
-                rgba(255,255,255,0.96) 0%,
-                rgba(236,253,245,0.90) 100%);
-            border-color: var(--verde-border);
-            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--verde-border);
-        }
-        .kpi-ok:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--verde-border); }
+    /* Lista de itens dentro do card */
+    .cc-itens {
+        padding: 10px 18px;
+        min-height: 36px;
+        max-height: 140px;
+        overflow-y: auto;
+    }
+    .cc-item-row {
+        display: flex; align-items: center; gap: 8px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--cinza-linha);
+        font-size: .82rem;
+    }
+    .cc-item-row:last-child { border-bottom: none; }
+    .cc-item-qty {
+        font-weight: 800;
+        color: var(--roxo);
+        min-width: 22px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+    .cc-item-nome { flex: 1; color: var(--cinza-medio); }
+    .cc-item-sub {
+        font-weight: 700;
+        color: var(--cinza-medio);
+        font-variant-numeric: tabular-nums;
+    }
+    .cc-item-rmv {
+        background: none; border: none;
+        color: #d1d5db; cursor: pointer;
+        font-size: .9rem; padding: 0 2px;
+        transition: color .15s;
+        line-height: 1;
+    }
+    .cc-item-rmv:hover { color: var(--vermelho); }
+    .cc-empty {
+        color: var(--cinza-suave);
+        font-size: .8rem;
+        font-style: italic;
+        padding: 4px 0;
+    }
 
-        .kpi-avencer {
-            background: linear-gradient(145deg,
-                rgba(255,255,255,0.96) 0%,
-                rgba(255,251,235,0.90) 100%);
-            border-color: var(--laranja-border);
-            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--laranja-border);
-        }
-        .kpi-avencer:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--laranja-border); }
+    /* Rodapé do card */
+    .cc-foot {
+        padding: 12px 18px;
+        display: flex; align-items: center; gap: 10px;
+        background: rgba(111,66,193,.03);
+        border-top: 1px solid var(--cinza-linha);
+    }
+    .cc-total {
+        flex: 1;
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--roxo);
+        font-variant-numeric: tabular-nums;
+    }
+    .btn-selecionar {
+        background: none;
+        border: 1.5px solid rgba(111,66,193,.30);
+        border-radius: var(--r-pill);
+        color: var(--roxo);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: .75rem;
+        padding: 5px 14px;
+        cursor: pointer;
+        transition: all .18s;
+    }
+    .btn-selecionar:hover, .comanda-card.ativa .btn-selecionar {
+        background: var(--roxo);
+        color: #fff;
+        border-color: var(--roxo);
+    }
+    .btn-pagar {
+        background: var(--verde);
+        border: none;
+        border-radius: var(--r-pill);
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: .75rem;
+        padding: 5px 14px;
+        cursor: pointer;
+        transition: all .18s;
+        box-shadow: 0 2px 8px rgba(5,150,105,.30);
+    }
+    .btn-pagar:hover {
+        background: #047857;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(5,150,105,.40);
+    }
+    .btn-cancelar {
+        background: none;
+        border: none;
+        color: #d1d5db;
+        cursor: pointer;
+        font-size: .85rem;
+        padding: 4px;
+        transition: color .15s;
+        line-height: 1;
+    }
+    .btn-cancelar:hover { color: var(--vermelho); }
 
-        .kpi-atrasado {
-            background: linear-gradient(145deg,
-                rgba(255,255,255,0.96) 0%,
-                rgba(254,242,242,0.90) 100%);
-            border-color: var(--vermelho-border);
-            box-shadow: var(--shadow-kpi), 0 0 0 1px var(--vermelho-border);
-        }
-        .kpi-atrasado:hover { box-shadow: var(--shadow-lg), 0 0 0 1px var(--vermelho-border); }
+    /* Estado vazio (sem comandas abertas) */
+    .empty-state {
+        grid-column: 1;
+        text-align: center;
+        padding: 80px 24px;
+        color: var(--cinza-suave);
+    }
+    .empty-icon { font-size: 3.5rem; opacity: .3; margin-bottom: 16px; }
+    .empty-text { font-size: .95rem; font-weight: 500; }
 
-        /* Ícone do KPI */
-        .kpi-icon-wrap {
-            width: 52px; height: 52px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-        .kpi-ok    .kpi-icon-wrap { background: var(--verde-bg);    }
-        .kpi-avencer .kpi-icon-wrap { background: var(--laranja-bg); }
-        .kpi-atrasado .kpi-icon-wrap { background: var(--vermelho-bg); }
+    /* ================================================================
+       MODAL "Abrir Nova Comanda"
+    ================================================================ */
+    .modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.55);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity .22s ease;
+    }
+    .modal-overlay.open {
+        opacity: 1; pointer-events: all;
+    }
+    .modal-box {
+        background: var(--branco);
+        border-radius: var(--r-lg);
+        padding: 32px;
+        width: 100%; max-width: 420px;
+        box-shadow: var(--shadow-lg);
+        transform: translateY(20px);
+        transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--cinza-texto);
+        margin-bottom: 6px;
+    }
+    .modal-sub {
+        font-size: .85rem; color: var(--cinza-suave);
+        margin-bottom: 22px;
+    }
+    .modal-input {
+        width: 100%;
+        border: 2px solid rgba(111,66,193,.20);
+        border-radius: var(--r-sm);
+        padding: 13px 16px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--cinza-texto);
+        background: var(--ciano);
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        margin-bottom: 16px;
+    }
+    .modal-input:focus {
+        border-color: var(--roxo);
+        box-shadow: 0 0 0 3px rgba(111,66,193,.12);
+    }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-modal-confirmar {
+        flex: 1;
+        background: var(--roxo);
+        color: #fff; border: none;
+        border-radius: var(--r-pill);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700; font-size: .95rem;
+        padding: 12px;
+        cursor: pointer;
+        box-shadow: var(--shadow-btn);
+        transition: all .22s ease;
+    }
+    .btn-modal-confirmar:hover {
+        background: var(--roxo-hover);
+        transform: translateY(-1px);
+    }
+    .btn-modal-cancelar {
+        background: none;
+        border: 1.5px solid rgba(0,0,0,.15);
+        border-radius: var(--r-pill);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600; font-size: .95rem;
+        padding: 12px 20px;
+        cursor: pointer;
+        color: var(--cinza-suave);
+        transition: all .18s;
+    }
+    .btn-modal-cancelar:hover { border-color: var(--cinza-medio); color: var(--cinza-texto); }
 
-        /* Número principal */
-        .kpi-number {
-            font-family: 'Anton', sans-serif; /* arena-title aplicado */
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            font-weight: 800;
-            font-size: 2.8rem;
-            line-height: 1;
-            letter-spacing: -0.03em;
-            margin-bottom: 4px;
-        }
-        .kpi-ok .kpi-number       { color: var(--verde); }
-        .kpi-avencer .kpi-number  { color: var(--laranja); }
-        .kpi-atrasado .kpi-number { color: var(--vermelho); }
+    /* ================================================================
+       TOAST DE FEEDBACK
+    ================================================================ */
+    .toast-arena {
+        position: fixed; bottom: 24px; right: 24px;
+        background: var(--sidebar-bg);
+        color: #fff;
+        border-radius: var(--r-md);
+        padding: 12px 20px;
+        font-size: .85rem;
+        font-weight: 600;
+        box-shadow: var(--shadow-lg);
+        z-index: 900;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all .28s cubic-bezier(.34,1.56,.64,1);
+        display: flex; align-items: center; gap: 10px;
+        max-width: 320px;
+        border-left: 4px solid var(--roxo);
+    }
+    .toast-arena.show { transform: translateY(0); opacity: 1; }
+    .toast-arena.erro { border-left-color: var(--vermelho); }
+    .toast-arena.ok   { border-left-color: var(--verde); }
 
-        .kpi-label {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--cinza-suave);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-bottom: 14px;
-        }
+    /* ================================================================
+       MOBILE — abas (< 768px)
+    ================================================================ */
+    .mobile-tabs {
+        display: none;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: var(--sidebar-bg);
+        border-top: 1px solid rgba(255,255,255,.10);
+        z-index: 150;
+    }
+    .mobile-tab-btn {
+        flex: 1;
+        background: none; border: none;
+        color: rgba(255,255,255,.55);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700; font-size: .75rem;
+        padding: 12px 8px 16px;
+        cursor: pointer;
+        display: flex; flex-direction: column;
+        align-items: center; gap: 4px;
+        transition: color .18s;
+    }
+    .mobile-tab-btn .tab-icon { font-size: 1.2rem; }
+    .mobile-tab-btn.active { color: var(--roxo); }
 
-        /* Valor financeiro dentro do KPI */
-        .kpi-valor {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border-radius: var(--radius-sm);
-            padding: 5px 12px;
-            font-size: 0.88rem;
-            font-weight: 700;
+    @media (max-width: 767px) {
+        .pdv-layout {
+            grid-template-columns: 1fr;
+            bottom: 56px; /* espaço para as abas */
         }
-        .kpi-ok    .kpi-valor { background: var(--verde-bg);    color: var(--verde);    border: 1px solid var(--verde-border);   }
-        .kpi-avencer .kpi-valor { background: var(--laranja-bg); color: var(--laranja);  border: 1px solid var(--laranja-border); }
-        .kpi-atrasado .kpi-valor { background: var(--vermelho-bg); color: var(--vermelho); border: 1px solid var(--vermelho-border); }
+        .pane-catalogo {
+            display: none;
+            border-left: none;
+            border-top: 1px solid var(--cinza-linha);
+        }
+        .pane-catalogo.mobile-active { display: flex; }
+        .pane-comandas.mobile-hidden { display: none; }
+        .mobile-tabs { display: flex; }
+        .topbar { padding: 0 16px; }
+        .topbar-kpi { display: none; }
+    }
 
-        /* Elemento decorativo geométrico no canto do card */
-        .kpi-card::after {
-            content: '';
-            position: absolute;
-            bottom: -28px; right: -28px;
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            opacity: 0.07;
-        }
-        .kpi-ok::after       { background: var(--verde); }
-        .kpi-avencer::after  { background: var(--laranja); }
-        .kpi-atrasado::after { background: var(--vermelho); }
+    /* Scrollbars finas */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(111,66,193,.22); border-radius: 3px; }
 
-        /* ================================================================
-           BARRA DE PROGRESSO VISUAL (receita confirmada vs pendente)
-        ================================================================ */
-        .receita-bar-wrap {
-            background: var(--branco);
-            border-radius: var(--radius-lg);
-            padding: 28px 32px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(111,66,193,0.08);
-            margin-bottom: 32px;
-        }
-        .receita-bar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .receita-bar-header h6 {
-            font-family: 'Anton', sans-serif; /* arena-title aplicado */
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            font-weight: 700;
-            font-size: 0.92rem;
-            color: var(--cinza-texto);
-            margin: 0;
-        }
-        .receita-bar-totais {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .receita-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--cinza-medio);
-        }
-        .receita-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-        }
-        /* Barra de progresso customizada */
-        .progress-custom {
-            height: 10px;
-            border-radius: 50px;
-            background: rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-        .progress-fill-verde {
-            height: 100%;
-            background: linear-gradient(90deg, var(--verde) 0%, #34d399 100%);
-            border-radius: 50px;
-            transition: width 1s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        /* ================================================================
-           TABELA FINANCEIRA
-        ================================================================ */
-        .table-card {
-            background: var(--branco);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(111,66,193,0.07);
-            overflow: hidden;
-        }
-
-        .table-card-header {
-            padding: 24px 32px 20px;
-            border-bottom: 1.5px solid rgba(111,66,193,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .table-card-header h5 {
-            font-family: 'Anton', sans-serif; /* arena-title aplicado */
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            font-weight: 800;
-            font-size: 1.05rem;
-            color: var(--cinza-texto);
-            margin: 0;
-        }
-
-        /* Search / filtro leve */
-        .table-search {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--ciano-bg);
-            border: 1.5px solid rgba(111,66,193,0.14);
-            border-radius: 10px;
-            padding: 8px 14px;
-            font-size: 0.82rem;
-            color: var(--cinza-suave);
-        }
-        .table-search input {
-            border: none;
-            background: transparent;
-            outline: none;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            color: var(--cinza-texto);
-            width: 160px;
-        }
-        .table-search input::placeholder { color: var(--cinza-suave); }
-
-        /* Tabela */
-        .fin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .fin-table thead tr {
-            background: rgba(111,66,193,0.03);
-        }
-        .fin-table thead th {
-            padding: 14px 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.09em;
-            text-transform: uppercase;
-            color: var(--cinza-suave);
-            border-bottom: 1.5px solid rgba(111,66,193,0.07);
-            white-space: nowrap;
-        }
-
-        .fin-table tbody tr {
-            border-bottom: 1px solid var(--cinza-linha);
-            transition: background 0.15s ease;
-        }
-        .fin-table tbody tr:last-child { border-bottom: none; }
-        .fin-table tbody tr:hover { background: rgba(111,66,193,0.025); }
-
-        .fin-table tbody td {
-            padding: 16px 20px;
-            font-size: 0.88rem;
-            vertical-align: middle;
-        }
-
-        /* Avatar do aluno */
-        .aluno-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .aluno-avatar {
-            width: 36px; height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--roxo) 0%, #8B5CF6 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.82rem;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-            letter-spacing: 0.02em;
-        }
-        .aluno-nome {
-            font-weight: 600;
-            color: var(--cinza-texto);
-            font-size: 0.9rem;
-        }
-
-        /* Valor */
-        .valor-cell {
-            font-weight: 700;
-            color: var(--cinza-medio);
-            font-size: 0.9rem;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ---- BADGES de status — o coração do redesign ---- */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border-radius: var(--radius-pill);
-            padding: 5px 13px 5px 10px;
-            font-size: 0.77rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
-            white-space: nowrap;
-            position: relative;
-        }
-        .badge-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        /* OK — verde esmeralda */
-        .badge-ok {
-            background: var(--verde-bg);
-            color: var(--verde);
-            border: 1px solid var(--verde-border);
-        }
-        .badge-ok .badge-dot {
-            background: var(--verde);
-            box-shadow: 0 0 0 2px rgba(5,150,105,0.25);
-            animation: pulse-ok 2.5s ease-in-out infinite;
-        }
-
-        /* A Vencer — laranja âmbar */
-        .badge-avencer {
-            background: var(--laranja-bg);
-            color: var(--laranja);
-            border: 1px solid var(--laranja-border);
-        }
-        .badge-avencer .badge-dot {
-            background: var(--laranja);
-        }
-
-        /* Atrasado — vermelho rubi */
-        .badge-atrasado {
-            background: var(--vermelho-bg);
-            color: var(--vermelho);
-            border: 1px solid var(--vermelho-border);
-        }
-        .badge-atrasado .badge-dot {
-            background: var(--vermelho);
-            animation: pulse-red 1.8s ease-in-out infinite;
-        }
-
-        @keyframes pulse-ok {
-            0%, 100% { box-shadow: 0 0 0 2px rgba(5,150,105,0.25); }
-            50% { box-shadow: 0 0 0 4px rgba(5,150,105,0.10); }
-        }
-        @keyframes pulse-red {
-            0%, 100% { box-shadow: 0 0 0 2px rgba(220,38,38,0.20); }
-            50% { box-shadow: 0 0 0 4px rgba(220,38,38,0.08); }
-        }
-
-        /* Célula vazia */
-        .empty-row td {
-            padding: 52px 24px;
-            text-align: center;
-        }
-        .empty-icon { font-size: 2.5rem; opacity: 0.35; margin-bottom: 10px; }
-        .empty-text { font-size: 0.9rem; color: var(--cinza-suave); }
-
-        /* Rodapé da tabela */
-        .table-footer {
-            padding: 16px 24px;
-            border-top: 1.5px solid rgba(111,66,193,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .table-footer-count {
-            font-size: 0.78rem;
-            color: var(--cinza-suave);
-            font-weight: 500;
-        }
-        .btn-admin-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--roxo);
-            text-decoration: none;
-            transition: color 0.18s;
-        }
-        .btn-admin-link:hover { color: var(--roxo-hover); }
-
-        /* ================================================================
-           ANIMAÇÕES DE ENTRADA
-        ================================================================ */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(22px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .anim-1 { animation: fadeUp 0.55s 0.00s ease both; }
-        .anim-2 { animation: fadeUp 0.55s 0.10s ease both; }
-        .anim-3 { animation: fadeUp 0.55s 0.20s ease both; }
-        .anim-4 { animation: fadeUp 0.55s 0.30s ease both; }
-        .anim-5 { animation: fadeUp 0.55s 0.40s ease both; }
-
-        /* ================================================================
-           RESPONSIVIDADE DA TABELA
-        ================================================================ */
-        .table-responsive-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        @media (max-width: 640px) {
-            .table-card-header { padding: 18px 20px 14px; }
-            .table-search { display: none; }
-            .fin-table thead th,
-            .fin-table tbody td { padding: 14px 16px; }
-            .aluno-avatar { display: none; }
-        }
-
-        /* ================================================================
-           FOOTER DA PÁGINA
-        ================================================================ */
-        .page-footer-strip {
-            position: relative;
-            z-index: 1;
-            padding: 24px 0 36px;
-            text-align: center;
-            font-size: 0.76rem;
-            color: var(--cinza-suave);
-            border-top: 1px solid rgba(111,66,193,0.07);
-        }
+    /* Spinner de loading inline */
+    .spin {
+        display: inline-block;
+        width: 14px; height: 14px;
+        border: 2px solid rgba(255,255,255,.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-<!-- ================================================================
-     NAVBAR
-================================================================ -->
-<nav class="navbar-fin">
-    <div class="container d-flex align-items-center">
-
-        <a class="me-auto d-lg-none" href="/">
-            <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
-        </a>
-
-        <div class="d-none d-lg-block" style="flex:1;"></div>
-
-        <a class="mx-auto d-none d-lg-flex" href="/">
-            <img src="{% static 'reservas/img/logo_oficial.png' %}" alt="Logo Arena" class="navbar-logo">
-        </a>
-
-        <div class="d-flex gap-2 justify-content-end" style="flex:1;">
-            <a href="/agendamento/" class="btn-nav">📅 Ver Reservas</a>
-        </div>
-    </div>
-</nav>
 
 <!-- ================================================================
-     CONTEÚDO PRINCIPAL
+     TOPBAR
 ================================================================ -->
-<div class="page-wrapper">
-<div class="container">
+<header class="topbar">
+    <a href="/" class="topbar-brand">
+        <div class="brand-icon">🍺</div>
+        PDV · Bar
+    </a>
 
-    <!-- Header da página -->
-    <div class="page-header anim-1">
-        <p class="page-eyebrow">Gestão financeira</p>
-        <h1 class="page-title arena-title title-lg title-texture">
-            Fluxo de Caixa
-            <span class="month-badge">📅 {{ mes_texto }}</span>
-        </h1>
-        <p class="page-meta">Visão consolidada dos mensalistas ativos neste mês</p>
+    <div class="topbar-divider"></div>
+
+    <div class="topbar-kpi" id="kpi-abertas">
+        <span class="dot" style="background:#6ee7b7;"></span>
+        <span id="kpi-qtd-text">{{ qtd_abertas }} aberta{{ qtd_abertas|pluralize:"s" }}</span>
+    </div>
+    <div class="topbar-kpi" id="kpi-total">
+        💰 <strong id="kpi-total-text">R$ {{ total_aberto|floatformat:2 }}</strong>
     </div>
 
-    <!-- ============================================================
-         KPI CARDS
-    ============================================================ -->
-    <div class="kpi-grid anim-2">
+    <button class="btn-nova-comanda" onclick="abrirModal()">
+        ＋ Nova Comanda
+    </button>
 
-        <!-- OK -->
-        <div class="kpi-card kpi-ok">
-            <div class="kpi-icon-wrap">✅</div>
-            <div class="kpi-number">{{ total_ok }}</div>
-            <div class="kpi-label">Pagamentos OK</div>
-            <div class="kpi-valor">
-                💰 R$ {{ receita_confirmada }}
-            </div>
+    <div class="topbar-divider"></div>
+    <a href="/" class="topbar-back">← Site</a>
+</header>
+
+<!-- ================================================================
+     LAYOUT PRINCIPAL
+================================================================ -->
+<div class="pdv-layout">
+
+    <!-- ── Painel esquerdo: Comandas ── -->
+    <div class="pane-comandas" id="pane-comandas">
+
+        <div class="pane-header">
+            <span class="pane-title">Comandas abertas</span>
+            <span class="pane-count" id="pane-count">{{ qtd_abertas }}</span>
         </div>
 
-        <!-- A Vencer -->
-        <div class="kpi-card kpi-avencer">
-            <div class="kpi-icon-wrap">🕐</div>
-            <div class="kpi-number">{{ total_avencer }}</div>
-            <div class="kpi-label">A Vencer</div>
-            <div class="kpi-valor">
-                📆 No prazo
-            </div>
-        </div>
-
-        <!-- Atrasados -->
-        <div class="kpi-card kpi-atrasado">
-            <div class="kpi-icon-wrap">⚠️</div>
-            <div class="kpi-number">{{ total_atrasado }}</div>
-            <div class="kpi-label">Atrasados</div>
-            <div class="kpi-valor">
-                🔴 R$ {{ receita_pendente }} em aberto
-            </div>
+        <div id="comandas-container">
+            <!-- Renderizado pelo JS a partir do estado inicial -->
         </div>
 
     </div>
 
-    <!-- ============================================================
-         BARRA DE PROGRESSO DA RECEITA
-    ============================================================ -->
-    <div class="receita-bar-wrap anim-3">
-        <div class="receita-bar-header">
-            <h6>Progresso da Receita Mensal</h6>
-            <div class="receita-bar-totais">
-                <div class="receita-item">
-                    <span class="receita-dot" style="background: var(--verde);"></span>
-                    Confirmada: <strong>R$ {{ receita_confirmada }}</strong>
-                </div>
-                <div class="receita-item">
-                    <span class="receita-dot" style="background: rgba(0,0,0,0.15);"></span>
-                    Pendente: <strong>R$ {{ receita_pendente }}</strong>
-                </div>
-            </div>
-        </div>
-        <div class="progress-custom">
-            <div class="progress-fill-verde" id="progressBar"></div>
-        </div>
-    </div>
+    <!-- ── Painel direito: Catálogo de produtos ── -->
+    <aside class="pane-catalogo" id="pane-catalogo">
 
-    <!-- ============================================================
-         TABELA DE FLUXO DE CAIXA
-    ============================================================ -->
-    <div class="table-card anim-4" style="margin-bottom: 48px;">
-
-        <!-- Header da tabela -->
-        <div class="table-card-header">
-            <h5>👥 Mensalistas — {{ mes_texto }}</h5>
-            <div class="table-search">
-                🔍
-                <input type="text" id="searchInput" placeholder="Buscar aluno..." onkeyup="filterTable()">
+        <div class="catalogo-header">
+            <div class="catalogo-title">Adicionar à Comanda</div>
+            <div class="catalogo-destino vazio" id="catalogo-destino">
+                ← Selecione uma comanda
             </div>
         </div>
 
-        <!-- Tabela -->
-        <div class="table-responsive-wrapper">
-            <table class="fin-table" id="finTable">
-                <thead>
-                    <tr>
-                        <th>Aluno</th>
-                        <th>Mensalidade</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in lista_financeira %}
-                    <tr>
-                        <!-- Nome com avatar gerado pela inicial -->
-                        <td>
-                            <div class="aluno-cell">
-                                <div class="aluno-avatar">
-                                    {{ item.nome|slice:":2"|upper }}
-                                </div>
-                                <span class="aluno-nome">{{ item.nome }}</span>
-                            </div>
-                        </td>
+        <div class="catalogo-body" id="catalogo-body">
+            {% for categoria, produtos in categorias_dict.items %}
+                <div class="cat-label">{{ categoria }}</div>
+                {% for produto in produtos %}
+                <div class="produto-card {% if produto.estoque == 0 %}esgotado{% endif %}"
+                     id="pc-{{ produto.pk }}"
+                     onclick="adicionarProduto({{ produto.pk }})"
+                     data-produto-id="{{ produto.pk }}">
 
-                        <!-- Valor -->
-                        <td class="valor-cell">R$ {{ item.valor }}</td>
+                    <div class="produto-foto">
+                        {% if produto.foto %}
+                            <img src="{{ produto.foto.url }}" alt="{{ produto.nome }}">
+                        {% else %}
+                            🍽️
+                        {% endif %}
+                    </div>
 
-                        <!-- Badge de status -->
-                        <td>
-                            {% if item.classe_css == 'ok' %}
-                                <span class="status-badge badge-ok">
-                                    <span class="badge-dot"></span>
-                                    Pagamento OK
-                                </span>
-                            {% elif item.classe_css == 'atrasado' %}
-                                <span class="status-badge badge-atrasado">
-                                    <span class="badge-dot"></span>
-                                    {{ item.status }}
-                                </span>
+                    <div class="produto-info">
+                        <div class="produto-nome">{{ produto.nome }}</div>
+                        <div class="produto-preco">R$ {{ produto.preco|floatformat:2 }}</div>
+                        <div class="produto-estoque {% if produto.estoque == 0 %}esgotado{% elif produto.estoque <= 3 %}baixo{% endif %}"
+                             id="estoque-{{ produto.pk }}">
+                            {% if produto.estoque == 0 %}
+                                Sem estoque
+                            {% elif produto.estoque <= 3 %}
+                                ⚠️ Último{{ produto.estoque|pluralize }}s: {{ produto.estoque }}
                             {% else %}
-                                <span class="status-badge badge-avencer">
-                                    <span class="badge-dot"></span>
-                                    {{ item.status }}
-                                </span>
+                                {{ produto.estoque }} em estoque
                             {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr class="empty-row">
-                        <td colspan="3">
-                            <div class="empty-icon">🏖️</div>
-                            <p class="empty-text">Nenhum aluno mensalista cadastrado ainda.</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+
+                    <button class="btn-add-produto"
+                            {% if produto.estoque == 0 %}disabled{% endif %}
+                            onclick="event.stopPropagation(); adicionarProduto({{ produto.pk }})">
+                        ＋
+                    </button>
+                </div>
+                {% endfor %}
+            {% empty %}
+                <p style="color:var(--cinza-suave);font-size:.9rem;padding:20px 4px;">
+                    Nenhum produto disponível. Cadastre produtos no painel Admin.
+                </p>
+            {% endfor %}
         </div>
+    </aside>
 
-        <!-- Rodapé da tabela -->
-        <div class="table-footer">
-            <span class="table-footer-count">
-                {% with total=lista_financeira|length %}
-                    {{ total }} aluno{{ total|pluralize:"s" }} no mês
-                {% endwith %}
-            </span>
-            <a href="/admin/alunos/pagamento/" class="btn-admin-link">
-                Gerenciar no Admin →
-            </a>
-        </div>
+</div><!-- /pdv-layout -->
 
-    </div>
-
-</div><!-- /container -->
-</div><!-- /page-wrapper -->
-
-<!-- Footer -->
-<div class="page-footer-strip">
-    Arena Ibituruna Beach — Sistema de Gestão
+<!-- ================================================================
+     ABAS MOBILE
+================================================================ -->
+<div class="mobile-tabs" id="mobile-tabs">
+    <button class="mobile-tab-btn active" id="tab-btn-comandas" onclick="mobileTab('comandas')">
+        <span class="tab-icon">🧾</span>
+        Comandas
+    </button>
+    <button class="mobile-tab-btn" id="tab-btn-catalogo" onclick="mobileTab('catalogo')">
+        <span class="tab-icon">🍽️</span>
+        Catálogo
+    </button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ================================================================
+     MODAL NOVA COMANDA
+================================================================ -->
+<div class="modal-overlay" id="modal-nova" onclick="fecharModalSeFora(event)">
+    <div class="modal-box">
+        <div class="modal-title">🧾 Nova Comanda</div>
+        <p class="modal-sub">Identifique o cliente ou mesa para abrir a comanda.</p>
+        <input
+            type="text"
+            id="modal-input-nome"
+            class="modal-input"
+            placeholder='Ex: "João Silva", "Mesa 4"'
+            maxlength="80"
+            onkeydown="if(event.key==='Enter') confirmarNovaComanda()"
+        >
+        <div class="modal-actions">
+            <button class="btn-modal-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-modal-confirmar" id="btn-confirmar-nova" onclick="confirmarNovaComanda()">
+                Abrir Comanda
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast de feedback -->
+<div class="toast-arena" id="toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-msg"></span>
+</div>
+
+<!-- ================================================================
+     JAVASCRIPT — Motor do PDV
+================================================================ -->
 <script>
-    // ----------------------------------------------------------------
-    // Animação da barra de progresso ao carregar
-    // ----------------------------------------------------------------
-    (function() {
-        var bar = document.getElementById('progressBar');
-        if (!bar) return;
+'use strict';
 
-        // Os valores vêm do Django como strings; precisamos calcular o %
-        // Usamos data-attributes para passar os valores do template
-        var confirmada = parseFloat("{{ receita_confirmada|default:'0' }}") || 0;
-        var pendente   = parseFloat("{{ receita_pendente|default:'0' }}")   || 0;
-        var total = confirmada + pendente;
+// ── Estado inicial vindo do Django (JSON seguro) ─────────────────
+const CSRF_TOKEN  = '{{ csrf_token }}';
+const URL_ABRIR   = '{% url "pdv:abrir_comanda" %}';
+const URL_ADD     = '{% url "pdv:adicionar_item" %}';
+const URL_RMV     = '{% url "pdv:remover_item" %}';
+const URL_FECHAR  = '/pdv/fechar/';
+const URL_CANCEL  = '/pdv/cancelar/';
 
-        var pct = total > 0 ? Math.round((confirmada / total) * 100) : 0;
+// Parseia o JSON injetado pelo Django; fallback para array vazio
+let estadoComandas = [];
+let estadoProdutos = [];
+try {
+    estadoComandas = JSON.parse(document.getElementById('dados-comandas').textContent);
+    estadoProdutos = JSON.parse(document.getElementById('dados-produtos').textContent);
+} catch(e) {}
 
-        // Anima após o DOM carregar
-        setTimeout(function() {
-            bar.style.width = pct + '%';
-        }, 300);
-    })();
+let comandaSelecionadaId = null;
 
-    // ----------------------------------------------------------------
-    // Filtro de busca na tabela (client-side, sem requisição)
-    // ----------------------------------------------------------------
-    function filterTable() {
-        var input = document.getElementById('searchInput').value.toLowerCase();
-        var rows  = document.querySelectorAll('#finTable tbody tr:not(.empty-row)');
+// ────────────────────────────────────────────────────────────────
+// RENDERIZAÇÃO
+// ────────────────────────────────────────────────────────────────
 
-        rows.forEach(function(row) {
-            var nome = row.querySelector('.aluno-nome');
-            if (!nome) return;
-            row.style.display = nome.textContent.toLowerCase().includes(input) ? '' : 'none';
-        });
+function render() {
+    renderComandas();
+    renderCatalogoDestino();
+    renderKPIs();
+}
+
+function renderComandas() {
+    const container = document.getElementById('comandas-container');
+    const count     = document.getElementById('pane-count');
+
+    const abertas = estadoComandas.filter(c => c.status === 'aberta');
+    count.textContent = abertas.length;
+
+    if (abertas.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🧾</div>
+                <p class="empty-text">Nenhuma comanda aberta.<br>Clique em "Nova Comanda" para começar.</p>
+            </div>`;
+        return;
     }
+
+    container.innerHTML = abertas.map(c => renderCardComanda(c)).join('');
+}
+
+function renderCardComanda(c) {
+    const ativa   = c.id === comandaSelecionadaId ? 'ativa' : '';
+    const itensHtml = c.itens.length === 0
+        ? '<span class="cc-empty">Nenhum item ainda</span>'
+        : c.itens.map(i => `
+            <div class="cc-item-row">
+                <span class="cc-item-qty">${i.quantidade}×</span>
+                <span class="cc-item-nome">${esc(i.produto_nome)}</span>
+                <span class="cc-item-sub">R$ ${fmtDec(i.subtotal)}</span>
+                <button class="cc-item-rmv"
+                        onclick="event.stopPropagation(); removerItem(${i.id})"
+                        title="Remover 1 unidade">✕</button>
+            </div>`).join('');
+
+    return `
+    <div class="comanda-card ${ativa}" id="card-${c.id}"
+         onclick="selecionarComanda(${c.id})">
+        <div class="cc-head">
+            <span class="cc-numero">#${String(c.id).padStart(4,'0')}</span>
+            <span class="cc-nome">${esc(c.identificacao)}</span>
+            <span class="cc-hora">${c.aberta_em}</span>
+        </div>
+        <div class="cc-itens">${itensHtml}</div>
+        <div class="cc-foot">
+            <span class="cc-total">R$ ${fmtDec(c.total)}</span>
+            <button class="btn-selecionar"
+                    onclick="event.stopPropagation(); selecionarComanda(${c.id})">
+                ${c.id === comandaSelecionadaId ? '✓ Ativa' : 'Selecionar'}
+            </button>
+            <button class="btn-pagar"
+                    onclick="event.stopPropagation(); pagarComanda(${c.id})">
+                ✅ Pagar
+            </button>
+            <button class="btn-cancelar"
+                    onclick="event.stopPropagation(); cancelarComanda(${c.id})"
+                    title="Cancelar comanda">✕</button>
+        </div>
+    </div>`;
+}
+
+function renderCatalogoDestino() {
+    const el = document.getElementById('catalogo-destino');
+    if (!comandaSelecionadaId) {
+        el.className = 'catalogo-destino vazio';
+        el.textContent = '← Selecione uma comanda';
+        return;
+    }
+    const c = estadoComandas.find(x => x.id === comandaSelecionadaId);
+    if (!c) {
+        el.className = 'catalogo-destino vazio';
+        el.textContent = '← Selecione uma comanda';
+        return;
+    }
+    el.className = 'catalogo-destino';
+    el.innerHTML = `🎯 <strong>#${String(c.id).padStart(4,'0')}</strong> — ${esc(c.identificacao)}`;
+}
+
+function renderKPIs() {
+    const abertas = estadoComandas.filter(c => c.status === 'aberta');
+    const total   = abertas.reduce((s, c) => s + parseFloat(c.total || 0), 0);
+    const qtd     = abertas.length;
+
+    document.getElementById('kpi-qtd-text').textContent =
+        `${qtd} aberta${qtd !== 1 ? 's' : ''}`;
+    document.getElementById('kpi-total-text').textContent =
+        `R$ ${total.toFixed(2).replace('.', ',')}`;
+    document.getElementById('pane-count').textContent = qtd;
+}
+
+function atualizarEstoqueVisual(produtoId, novoEstoque) {
+    const el    = document.getElementById(`estoque-${produtoId}`);
+    const card  = document.getElementById(`pc-${produtoId}`);
+    const btnAdd = card ? card.querySelector('.btn-add-produto') : null;
+    if (!el) return;
+
+    if (novoEstoque <= 0) {
+        el.className   = 'produto-estoque esgotado';
+        el.textContent = 'Sem estoque';
+        if (card)   card.classList.add('esgotado');
+        if (btnAdd) btnAdd.disabled = true;
+    } else if (novoEstoque <= 3) {
+        el.className   = 'produto-estoque baixo';
+        el.textContent = `⚠️ Último${novoEstoque > 1 ? 's' : ''}: ${novoEstoque}`;
+        if (card)   card.classList.remove('esgotado');
+        if (btnAdd) btnAdd.disabled = false;
+    } else {
+        el.className   = 'produto-estoque';
+        el.textContent = `${novoEstoque} em estoque`;
+        if (card)   card.classList.remove('esgotado');
+        if (btnAdd) btnAdd.disabled = false;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────
+// AÇÕES
+// ────────────────────────────────────────────────────────────────
+
+function selecionarComanda(id) {
+    comandaSelecionadaId = (comandaSelecionadaId === id) ? null : id;
+    render();
+    // Mobile: troca para o catálogo automaticamente
+    if (window.innerWidth < 768 && comandaSelecionadaId) {
+        mobileTab('catalogo');
+    }
+}
+
+async function adicionarProduto(produtoId) {
+    if (!comandaSelecionadaId) {
+        toast('Selecione uma comanda primeiro!', 'erro');
+        return;
+    }
+    const card = document.getElementById(`pc-${produtoId}`);
+    if (card) { card.classList.add('adding'); }
+
+    try {
+        const resp = await post(URL_ADD, {
+            comanda_id: comandaSelecionadaId,
+            produto_id: produtoId,
+        });
+        if (resp.erro) { toast(resp.erro, 'erro'); return; }
+
+        // Atualiza comanda no estado local
+        const idx = estadoComandas.findIndex(c => c.id === resp.comanda.id);
+        if (idx !== -1) estadoComandas[idx] = resp.comanda;
+
+        // Atualiza estoque local no estadoProdutos
+        const prod = estadoProdutos.find(p => p.id === produtoId);
+        if (prod) {
+            prod.estoque = Math.max(0, prod.estoque - 1);
+            atualizarEstoqueVisual(produtoId, prod.estoque);
+        }
+
+        render();
+        toast(`Adicionado à comanda #${String(comandaSelecionadaId).padStart(4,'0')}`, 'ok');
+    } finally {
+        if (card) { setTimeout(() => card.classList.remove('adding'), 300); }
+    }
+}
+
+async function removerItem(itemId) {
+    try {
+        const resp = await post(URL_RMV, { item_id: itemId });
+        if (resp.erro) { toast(resp.erro, 'erro'); return; }
+
+        const idx = estadoComandas.findIndex(c => c.id === resp.comanda.id);
+        if (idx !== -1) estadoComandas[idx] = resp.comanda;
+
+        // Devolve 1 ao estoque visual
+        // Identifica o produto pelo item removido
+        const comanda = resp.comanda;
+        // Percorre itens para encontrar o produto — simplesmente re-renderiza o estoque
+        // com base no estadoProdutos (será correto após o próximo reload completo)
+        // Para UX imediata, incrementamos o estoque do produto visualmente:
+        const itemOriginal = estadoComandas.flatMap(c => c.itens).find(i => i.id === itemId);
+        if (itemOriginal) {
+            const prod = estadoProdutos.find(p => p.id === itemOriginal.produto_id);
+            if (prod) {
+                prod.estoque += 1;
+                atualizarEstoqueVisual(prod.id, prod.estoque);
+            }
+        }
+
+        render();
+    } catch(e) {
+        toast('Erro ao remover item.', 'erro');
+    }
+}
+
+async function pagarComanda(id) {
+    if (!confirm(`Confirma o pagamento da Comanda #${String(id).padStart(4,'0')}?`)) return;
+    try {
+        const resp = await post(`${URL_FECHAR}${id}/`, {});
+        if (resp.ok) {
+            estadoComandas = estadoComandas.filter(c => c.id !== id);
+            if (comandaSelecionadaId === id) comandaSelecionadaId = null;
+            render();
+            toast(`Comanda #${String(id).padStart(4,'0')} paga! ✅`, 'ok');
+        }
+    } catch(e) {
+        toast('Erro ao fechar comanda.', 'erro');
+    }
+}
+
+async function cancelarComanda(id) {
+    if (!confirm(`Cancelar a Comanda #${String(id).padStart(4,'0')}? O estoque será restaurado.`)) return;
+    try {
+        const resp = await post(`${URL_CANCEL}${id}/`, {});
+        if (resp.ok) {
+            estadoComandas = estadoComandas.filter(c => c.id !== id);
+            if (comandaSelecionadaId === id) comandaSelecionadaId = null;
+            // Recarre a página para sincronizar estoques devolvidos
+            location.reload();
+        }
+    } catch(e) {
+        toast('Erro ao cancelar comanda.', 'erro');
+    }
+}
+
+// ── Modal Nova Comanda ───────────────────────────────────────────
+function abrirModal() {
+    document.getElementById('modal-nova').classList.add('open');
+    setTimeout(() => document.getElementById('modal-input-nome').focus(), 100);
+}
+function fecharModal() {
+    document.getElementById('modal-nova').classList.remove('open');
+    document.getElementById('modal-input-nome').value = '';
+}
+function fecharModalSeFora(e) {
+    if (e.target === document.getElementById('modal-nova')) fecharModal();
+}
+
+async function confirmarNovaComanda() {
+    const input = document.getElementById('modal-input-nome');
+    const nome  = input.value.trim();
+    if (!nome) {
+        input.focus();
+        input.style.borderColor = 'var(--vermelho)';
+        setTimeout(() => input.style.borderColor = '', 1500);
+        return;
+    }
+    const btn = document.getElementById('btn-confirmar-nova');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>';
+
+    try {
+        const resp = await post(URL_ABRIR, { identificacao: nome });
+        if (resp.erro) { toast(resp.erro, 'erro'); return; }
+        estadoComandas.unshift(resp.comanda);
+        comandaSelecionadaId = resp.comanda.id;
+        fecharModal();
+        render();
+        toast(`Comanda #${String(resp.comanda.id).padStart(4,'0')} aberta para ${nome}`, 'ok');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Abrir Comanda';
+    }
+}
+
+// ── Toast ────────────────────────────────────────────────────────
+let _toastTimer = null;
+function toast(msg, tipo = 'info') {
+    const el   = document.getElementById('toast');
+    const icon = document.getElementById('toast-icon');
+    const txt  = document.getElementById('toast-msg');
+
+    el.className = `toast-arena ${tipo}`;
+    icon.textContent = tipo === 'ok' ? '✓' : tipo === 'erro' ? '✕' : 'ℹ';
+    txt.textContent  = msg;
+
+    void el.offsetWidth; // reflow para reiniciar a animação
+    el.classList.add('show');
+    if (_toastTimer) clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ── Mobile tabs ──────────────────────────────────────────────────
+function mobileTab(aba) {
+    const paneComandas  = document.getElementById('pane-comandas');
+    const paneCatalogo  = document.getElementById('pane-catalogo');
+    const btnComandas   = document.getElementById('tab-btn-comandas');
+    const btnCatalogo   = document.getElementById('tab-btn-catalogo');
+
+    if (aba === 'comandas') {
+        paneComandas.classList.remove('mobile-hidden');
+        paneCatalogo.classList.remove('mobile-active');
+        btnComandas.classList.add('active');
+        btnCatalogo.classList.remove('active');
+    } else {
+        paneComandas.classList.add('mobile-hidden');
+        paneCatalogo.classList.add('mobile-active');
+        btnComandas.classList.remove('active');
+        btnCatalogo.classList.add('active');
+    }
+}
+
+// ── Utilitários ──────────────────────────────────────────────────
+async function post(url, dados) {
+    const r = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken':  CSRF_TOKEN,
+        },
+        body: JSON.stringify(dados),
+    });
+    return r.json();
+}
+
+function fmtDec(val) {
+    return parseFloat(val || 0).toFixed(2).replace('.', ',');
+}
+
+function esc(str) {
+    return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+}
+
+// ── Boot ─────────────────────────────────────────────────────────
+render();
 </script>
+
+<!-- JSON injetado de forma segura via script tags ocultas -->
+<script id="dados-comandas" type="application/json">{{ comandas_json }}</script>
+<script id="dados-produtos" type="application/json">{{ produtos_json }}</script>
+
 </body>
 </html>
